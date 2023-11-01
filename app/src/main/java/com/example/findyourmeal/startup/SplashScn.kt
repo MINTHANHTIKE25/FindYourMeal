@@ -49,7 +49,7 @@ fun SplashScn(navController: NavController) {
             )
         }
         LaunchedEffect(key1 = true) {
-            delay(3000)
+            delay(2000)
             navController.popBackStack()
             navController.navigate(StartUpScreen.OnBoardingScreen.route)
         }

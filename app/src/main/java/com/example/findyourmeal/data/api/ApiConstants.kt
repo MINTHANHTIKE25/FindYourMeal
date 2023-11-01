@@ -9,4 +9,11 @@ object ApiConstants {
     const val LIST_ALL_CATEGORIES = "categories.php"
 
 
+    //search meal by name
+    const val SEARCH_MEAL_BY_NAME  ="search.php"
+
+
+    //search by meal id
+    const val SEARCH_BY_MEAL_ID = "lookup.php"
+
 }
