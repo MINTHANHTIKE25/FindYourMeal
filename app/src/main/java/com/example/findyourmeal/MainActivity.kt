@@ -1,8 +1,10 @@
 package com.example.findyourmeal
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -15,6 +17,7 @@ import com.example.findyourmeal.ui.theme.FindYourMealTheme
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         val viewModel=MainViewModelForApi(MyRepository())
         super.onCreate(savedInstanceState)
