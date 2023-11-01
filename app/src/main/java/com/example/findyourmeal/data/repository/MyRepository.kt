@@ -19,7 +19,7 @@ class MyRepository {
     /**
      * Getting meal which is search by Id
      */
-    suspend fun getSearchMealById(search: String = ""): SearchMealById {
+    suspend fun getSearchMealById(search: String): SearchMealById {
         return RetrofitInstance.apiService.getSearchMealById(search)
     }
 
@@ -27,7 +27,7 @@ class MyRepository {
     /**
      * Getting meal which is search by name
      */
-    suspend fun getSearchMealByName(search: String = ""): SearchMealByName {
+    suspend fun getSearchMealByName(search: String): SearchMealByName {
         return RetrofitInstance.apiService.getSearchMealByName(search)
     }
 

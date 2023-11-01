@@ -1,4 +1,4 @@
-package com.example.findyourmeal.startup.scnmain
+package com.example.findyourmeal.startup.mainlayout
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +20,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -32,6 +34,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.findyourmeal.R
 import com.example.findyourmeal.model.allcategories.Category
+import com.example.findyourmeal.startup.categorydialog.CustomDialogForCategory
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 @Composable
@@ -57,7 +60,6 @@ fun HomeScreen(navController: NavController, viewModelForApi: MainViewModelForAp
             iterations = LottieConstants.IterateForever
         )
 
-//        items(allCategory){ }
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.spacedBy(25.dp),
@@ -69,28 +71,37 @@ fun HomeScreen(navController: NavController, viewModelForApi: MainViewModelForAp
             }
             items(allCategory) { item: Category ->
                 EachCategory(
-                    category = item,
-                    viewModelForApi = viewModelForApi,
-                    navController = navController
+                    category = item
                 )
             }
         }
     }
 }
+
 @Composable
 fun EachCategory(
-    category: Category,
-    viewModelForApi: MainViewModelForApi,
-    navController: NavController
+    category: Category
 ) {
+
+
+    val showDialog = remember { mutableStateOf(false) }
+    if (showDialog.value) {
+        CustomDialogForCategory(
+            categoryName = category.strCategory,
+            img = category.strCategoryThumb,
+            description = category.strCategoryDescription
+        ) {
+            showDialog.value = it
+        }
+    }
+
     Card(
         shape = RoundedCornerShape(10.dp),
         elevation = CardDefaults.cardElevation(pressedElevation = 15.dp),
         modifier = Modifier
             .wrapContentSize()
             .clickable {
-//                viewModelForApi.addMeal(meal)\
-//                navController.navigate(HomeScreens.DetailScreen.route)
+                showDialog.value = true
             }
             .padding(start = 10.dp, end = 10.dp)
             .width(250.dp)
@@ -103,5 +114,7 @@ fun EachCategory(
                 .padding(top = 15.dp)
         )
         Text(text = category.strCategory, modifier = Modifier.align(Alignment.CenterHorizontally))
+
+
     }
 }

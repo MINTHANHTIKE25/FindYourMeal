@@ -26,25 +26,25 @@ class MainViewModelForApi(private val myRepository: MyRepository) : ViewModel() 
 
     var searchMealById: List<Meal?>? by mutableStateOf(listOf())
 
-    fun getSearchMealById() {
+    fun getSearchMealById(search : String) {
         viewModelScope.launch {
             try {
-                searchMealById = myRepository.getSearchMealById().meals
+                searchMealById = myRepository.getSearchMealById(search).meals
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
             }
         }
     }
 
-    var searchMealByName : List<com.example.findyourmeal.model.searchmealbyname.Meal>? by mutableStateOf(
+    var searchMealByName: List<com.example.findyourmeal.model.searchmealbyname.Meal>? by mutableStateOf(
         listOf()
     )
 
-    fun searchMealByName() {
+    fun searchMealByName(search : String) {
         viewModelScope.launch {
             try {
-                searchMealByName = myRepository.getSearchMealByName().meals
-            }catch (e: Exception){
+                searchMealByName = myRepository.getSearchMealByName(search).meals
+            } catch (e: Exception) {
                 errorMessage = e.message.toString()
             }
         }

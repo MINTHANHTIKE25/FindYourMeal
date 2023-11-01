@@ -10,7 +10,7 @@ object ApiConstants {
 
 
     //search meal by name
-    const val SEARCH_MEAL_BY_NAME  ="search.php"
+    const val SEARCH_MEAL_BY_NAME = "search.php"
 
 
     //search by meal id

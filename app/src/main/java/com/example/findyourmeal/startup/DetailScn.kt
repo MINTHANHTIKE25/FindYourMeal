@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -28,60 +29,69 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.findyourmeal.R
 import com.example.findyourmeal.model.searchmealbyname.Meal
+import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScn(meal: com.example.findyourmeal.model.sarchmealbyid.Meal, mainNavController: NavController) {
+fun DetailScn(
+    search: Int,
+    viewModelForApi: MainViewModelForApi,
+    mainNavController: NavController
+) {
+    LaunchedEffect(Unit) {
+        viewModelForApi.searchMealByName(search.toString())
+    }
+    val meal: List<Meal>? = viewModelForApi.searchMealByName
 
     val ingredients = mutableListOf<String>()
-    ingredients.add(meal.strIngredient1!!)
-    ingredients.add(meal.strIngredient2!!)
-    ingredients.add(meal.strIngredient3!!)
-    ingredients.add(meal.strIngredient4!!)
-    ingredients.add(meal.strIngredient5!!)
-    ingredients.add(meal.strIngredient6!!)
-    ingredients.add(meal.strIngredient7!!)
-    ingredients.add(meal.strIngredient8!!)
-    ingredients.add(meal.strIngredient9!!)
-    ingredients.add(meal.strIngredient10!!)
-    ingredients.add(meal.strIngredient11!!)
-    ingredients.add(meal.strIngredient12!!)
-    ingredients.add(meal.strIngredient13!!)
-    ingredients.add(meal.strIngredient14!!)
-    ingredients.add(meal.strIngredient15!!)
-    ingredients.add(meal.strIngredient16!!.toString())
-    ingredients.add(meal.strIngredient17!!.toString())
-    ingredients.add(meal.strIngredient18!!.toString())
-    ingredients.add(meal.strIngredient19!!.toString())
-    ingredients.add(meal.strIngredient20!!.toString())
+    ingredients.add(meal!![0]!!.strIngredient1!!)
+    ingredients.add(meal[0]!!.strIngredient2!!)
+    ingredients.add(meal[0]!!.strIngredient3!!)
+    ingredients.add(meal[0]!!.strIngredient4!!)
+    ingredients.add(meal[0]!!.strIngredient5!!)
+    ingredients.add(meal[0]!!.strIngredient6!!)
+    ingredients.add(meal[0]!!.strIngredient7!!)
+    ingredients.add(meal[0]!!.strIngredient8!!)
+    ingredients.add(meal[0]!!.strIngredient9!!)
+    ingredients.add(meal[0]!!.strIngredient10!!)
+    ingredients.add(meal[0]!!.strIngredient11!!)
+    ingredients.add(meal[0]!!.strIngredient12!!)
+    ingredients.add(meal[0]!!.strIngredient13!!)
+    ingredients.add(meal[0]!!.strIngredient14!!)
+    ingredients.add(meal[0]!!.strIngredient15!!)
+    ingredients.add(meal[0]!!.strIngredient16!!.toString())
+    ingredients.add(meal[0]!!.strIngredient17!!.toString())
+    ingredients.add(meal[0]!!.strIngredient18!!.toString())
+    ingredients.add(meal[0]!!.strIngredient19!!.toString())
+    ingredients.add(meal[0]!!.strIngredient20!!.toString())
 
 
     val measurements = mutableListOf<String>()
-    measurements.add(meal.strMeasure1!!)
-    measurements.add(meal.strMeasure2!!)
-    measurements.add(meal.strMeasure3!!)
-    measurements.add(meal.strMeasure4!!)
-    measurements.add(meal.strMeasure5!!)
-    measurements.add(meal.strMeasure6!!)
-    measurements.add(meal.strMeasure7!!)
-    measurements.add(meal.strMeasure8!!)
-    measurements.add(meal.strMeasure9!!)
-    measurements.add(meal.strMeasure10!!)
-    measurements.add(meal.strMeasure11!!)
-    measurements.add(meal.strMeasure12!!)
-    measurements.add(meal.strMeasure13!!)
-    measurements.add(meal.strMeasure14!!)
-    measurements.add(meal.strMeasure15!!)
-    measurements.add(meal.strMeasure16!!.toString())
-    measurements.add(meal.strMeasure17!!.toString())
-    measurements.add(meal.strMeasure18!!.toString())
-    measurements.add(meal.strMeasure19!!.toString())
-    measurements.add(meal.strMeasure20!!.toString())
+    measurements.add(meal[0]!!.strMeasure1!!)
+    measurements.add(meal[0]!!.strMeasure2!!)
+    measurements.add(meal[0]!!.strMeasure3!!)
+    measurements.add(meal[0]!!.strMeasure4!!)
+    measurements.add(meal[0]!!.strMeasure5!!)
+    measurements.add(meal[0]!!.strMeasure6!!)
+    measurements.add(meal[0]!!.strMeasure7!!)
+    measurements.add(meal[0]!!.strMeasure8!!)
+    measurements.add(meal[0]!!.strMeasure9!!)
+    measurements.add(meal[0]!!.strMeasure10!!)
+    measurements.add(meal[0]!!.strMeasure11!!)
+    measurements.add(meal[0]!!.strMeasure12!!)
+    measurements.add(meal[0]!!.strMeasure13!!)
+    measurements.add(meal[0]!!.strMeasure14!!)
+    measurements.add(meal[0]!!.strMeasure15!!)
+    measurements.add(meal[0]!!.strMeasure16!!.toString())
+    measurements.add(meal[0]!!.strMeasure17!!.toString())
+    measurements.add(meal[0]!!.strMeasure18!!.toString())
+    measurements.add(meal[0]!!.strMeasure19!!.toString())
+    measurements.add(meal[0]!!.strMeasure20!!.toString())
     Scaffold(
         topBar = {
             TopAppBar(title = {
                 Text(
-                    text = meal.strMeal!!,
+                    text = meal[0]!!.strMeal!!,
                     modifier = Modifier.padding(start = 20.dp),
                     fontFamily = FontFamily.SansSerif
                 )
@@ -109,7 +119,7 @@ fun DetailScn(meal: com.example.findyourmeal.model.sarchmealbyid.Meal, mainNavCo
 
         //For meal Image
         AsyncImage(
-            model = meal.strMealThumb, contentDescription = "meal image",
+            model = meal[0]!!.strMealThumb, contentDescription = "meal image",
             modifier = Modifier
                 .clip(MaterialTheme.shapes.medium)
                 .padding(all = 20.dp)
@@ -117,13 +127,13 @@ fun DetailScn(meal: com.example.findyourmeal.model.sarchmealbyid.Meal, mainNavCo
 
         //Meal Category
         Text(
-            text = "Category : ${meal.strCategory}", fontFamily = FontFamily.Serif,
+            text = "Category : ${meal[0]!!.strCategory}", fontFamily = FontFamily.Serif,
             modifier = Modifier.padding(all = 20.dp)
         )
 
         //Meal Area
         Text(
-            text = "Area : ${meal.strArea}", fontFamily = FontFamily.Serif,
+            text = "Area : ${meal[0]!!.strArea}", fontFamily = FontFamily.Serif,
             modifier = Modifier.padding(all = 20.dp)
         )
 
@@ -151,8 +161,8 @@ fun DetailScn(meal: com.example.findyourmeal.model.sarchmealbyid.Meal, mainNavCo
                 )
 
                 measurements.forEach { measurement ->
-                    IngredientsList(
-                        ingredient = measurement,
+                    MeasurementsList(
+                        measurement = measurement,
                         index = measurements.indexOf(measurement)
                     )
                 }
@@ -160,7 +170,7 @@ fun DetailScn(meal: com.example.findyourmeal.model.sarchmealbyid.Meal, mainNavCo
         }
 
         //ForYoutube Layout
-        ForYouTube(link = meal.strYoutube!!)
+        ForYouTube(link = meal[0]!!.strYoutube!!)
     }
 
 }

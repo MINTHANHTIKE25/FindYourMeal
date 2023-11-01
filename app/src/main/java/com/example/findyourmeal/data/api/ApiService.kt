@@ -31,6 +31,6 @@ interface ApiService {
     @GET(ApiConstants.SEARCH_MEAL_BY_NAME)
     suspend fun getSearchMealByName(
         @Query("s")
-        searchMealByName : String
-    ) : SearchMealByName
+        searchMealByName: String
+    ): SearchMealByName
 }
