@@ -67,5 +67,26 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    //navigation
     implementation("androidx.navigation:navigation-compose:2.7.4")
+
+    //Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+    // Jetpack Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-alpha03")
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+
+    // Coroutines for asynchronous programming
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+
+    //extended icons
+    implementation("androidx.compose.material:material-icons-extended-android:1.5.4")
+
+    //LottieFiles animation
+    implementation("com.airbnb.android:lottie-compose:6.0.0")
 }

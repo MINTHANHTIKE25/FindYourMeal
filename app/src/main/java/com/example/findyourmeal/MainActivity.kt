@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.findyourmeal.startup.MainNavSetup
+import com.example.findyourmeal.startup.MainScn
+import com.example.findyourmeal.startup.SplashScn
 import com.example.findyourmeal.ui.theme.FindYourMealTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,8 +26,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val navController= rememberNavController()
-                    MainNavSetup(navController)
+                   val navController= rememberNavController()
+                   MainNavSetup(navController)
                 }
             }
         }
