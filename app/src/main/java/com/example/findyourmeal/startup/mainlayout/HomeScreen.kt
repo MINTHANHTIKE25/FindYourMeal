@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.airbnb.lottie.compose.LottieAnimation
@@ -37,11 +38,17 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.findyourmeal.R
 import com.example.findyourmeal.model.allcategories.Category
+import com.example.findyourmeal.room.SavedData
+import com.example.findyourmeal.room.SavedDataViewModel
+import com.example.findyourmeal.room.SavedDataViewModelFactory
 import com.example.findyourmeal.startup.categorydialog.CustomDialogForCategory
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 @Composable
-fun HomeScreen(navController: NavController, viewModelForApi: MainViewModelForApi) {
+fun HomeScreen(
+    navController: NavController, viewModelForApi: MainViewModelForApi,
+    factory: SavedDataViewModelFactory, vmOfRoom: SavedDataViewModel = viewModel(factory = factory)
+) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.animation_for_home))
     val loading by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
     val allCategory: List<Category> = viewModelForApi.allCategories
@@ -65,8 +72,10 @@ fun HomeScreen(navController: NavController, viewModelForApi: MainViewModelForAp
         )
 
         if (allCategory.isEmpty()) {
-            Column(verticalArrangement = Arrangement.Center,
-                horizontalAlignment = CenterHorizontally) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = CenterHorizontally
+            ) {
                 LottieAnimation(
                     modifier = Modifier.size(200.dp),
                     enableMergePaths = true,
@@ -87,7 +96,7 @@ fun HomeScreen(navController: NavController, viewModelForApi: MainViewModelForAp
 
             items(allCategory) { item: Category ->
                 EachCategory(
-                    category = item
+                    category = item,vmOfRoom
                 )
             }
         }
@@ -96,7 +105,8 @@ fun HomeScreen(navController: NavController, viewModelForApi: MainViewModelForAp
 
 @Composable
 fun EachCategory(
-    category: Category
+    category: Category,
+    vmOfRoom: SavedDataViewModel
 ) {
 
     //Creating dialog to show the information of the category
@@ -119,6 +129,7 @@ fun EachCategory(
             .wrapContentSize()
             .clickable {
                 showDialog.value = true
+                vmOfRoom.insertData(SavedData(mealId = category.idCategory, title = category.strCategory))
             }
             .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
             .width(250.dp)

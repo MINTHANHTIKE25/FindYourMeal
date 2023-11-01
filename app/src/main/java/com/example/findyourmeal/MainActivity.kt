@@ -11,6 +11,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.findyourmeal.data.repository.MyRepository
+import com.example.findyourmeal.room.DbCreation
+import com.example.findyourmeal.room.SavedDataRepo
+import com.example.findyourmeal.room.SavedDataViewModel
+import com.example.findyourmeal.room.SavedDataViewModelFactory
 import com.example.findyourmeal.startup.MainNavSetup
 import com.example.findyourmeal.ui.theme.FindYourMealTheme
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
@@ -18,6 +22,9 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
+        val dao=DbCreation.getDataBase(application).dao
+        val repo=SavedDataRepo(dao)
+        val factory=SavedDataViewModelFactory(repo=repo)
         val viewModel = MainViewModelForApi(MyRepository())
         super.onCreate(savedInstanceState)
         setContent {
@@ -28,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    MainNavSetup(navController, viewModel)
+                    MainNavSetup(navController, viewModel,factory)
                 }
             }
         }

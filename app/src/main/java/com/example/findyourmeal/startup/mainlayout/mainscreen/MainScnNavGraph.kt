@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.findyourmeal.room.SavedDataViewModelFactory
 import com.example.findyourmeal.startup.mainlayout.FavScn
 import com.example.findyourmeal.startup.mainlayout.HomeScreen
 import com.example.findyourmeal.startup.mainlayout.SettingScn
@@ -12,17 +13,18 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 //Setting navigation host for main screen
 @Composable
-fun MainScnNavGraph(viewModelForApi: MainViewModelForApi, navController: NavHostController) {
+fun MainScnNavGraph(viewModelForApi: MainViewModelForApi, navController: NavHostController,
+                    factory: SavedDataViewModelFactory) {
 
     NavHost(navController = navController, startDestination = BottomNaviRoutes.HomeScreen.routes) {
         composable(BottomNaviRoutes.HomeScreen.routes) {
-            HomeScreen(navController, viewModelForApi)
+            HomeScreen(navController, viewModelForApi,factory)
         }
         composable(BottomNaviRoutes.SearchScreen.routes) {
             SearchScn(navController, viewModelForApi)
         }
         composable(BottomNaviRoutes.FavScreen.routes) {
-            FavScn(navController)
+            FavScn(navController,factory)
         }
         composable(BottomNaviRoutes.SettingScreen.routes) {
             SettingScn(navController)

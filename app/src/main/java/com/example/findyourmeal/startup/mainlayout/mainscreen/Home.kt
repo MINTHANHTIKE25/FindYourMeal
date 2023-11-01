@@ -28,6 +28,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.findyourmeal.room.SavedDataViewModelFactory
 import com.example.findyourmeal.ui.theme.PurpleGrey40
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
@@ -35,7 +36,7 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 //Main Screen Setup
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(viewModelForApi: MainViewModelForApi) {
+fun Home(viewModelForApi: MainViewModelForApi,factory: SavedDataViewModelFactory) {
     val navController: NavHostController = rememberNavController()
 
     Scaffold(
@@ -44,7 +45,7 @@ fun Home(viewModelForApi: MainViewModelForApi) {
         }
     ) { paddingvalues ->
         paddingvalues
-        MainScnNavGraph(viewModelForApi = viewModelForApi, navController)
+        MainScnNavGraph(viewModelForApi = viewModelForApi, navController,factory)
     }
 }
 
