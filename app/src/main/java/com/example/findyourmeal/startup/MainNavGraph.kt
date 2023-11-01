@@ -10,16 +10,16 @@ import androidx.navigation.compose.composable
 fun MainNavSetup(navController: NavHostController) {
     NavHost(navController = navController, startDestination = StartUpScreen.SplashScreen.route){
         composable(route = StartUpScreen.SplashScreen.route){
-            SplashScn(navController = navController)
+
         }
         composable(route = StartUpScreen.OnBoardingScreen.route){
-            OnBoardingScn()
+
         }
         composable(route = StartUpScreen.MainScreen.route){
-            MainScn()
+
         }
         composable(route = StartUpScreen.DetailScreen.route){
-            DetailScn()
+
         }
     }
 }
