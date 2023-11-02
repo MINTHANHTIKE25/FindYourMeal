@@ -54,7 +54,7 @@ dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.8.0")
-    implementation(platform("androidx.compose:compose-bom:2023.10.01"))
+    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -62,38 +62,34 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.01"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // Pager and Indicators - Accompanist
-    implementation("com.google.accompanist:accompanist-pager:0.30.1")
-    implementation("com.google.accompanist:accompanist-pager-indicators:0.30.1")
+    implementation ("com.google.accompanist:accompanist-pager:0.24.2-alpha")
+    implementation ("com.google.accompanist:accompanist-pager-indicators:0.24.2-alpha")
     //navigation
-    implementation("androidx.navigation:navigation-compose:2.7.5")
+    implementation("androidx.navigation:navigation-compose:2.7.4")
 
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     //Coil
-    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
     // Jetpack Compose
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-alpha03")
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
 
     // Coroutines for asynchronous programming
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 
     //extended icons
     implementation("androidx.compose.material:material-icons-extended-android:1.5.4")
 
     //LottieFiles animation
-    implementation("com.airbnb.android:lottie-compose:6.1.0")
-
-    //SearchView
-    implementation("androidx.compose.material3:material3:1.1.2")
-
+    implementation("com.airbnb.android:lottie-compose:6.0.0")
 }
