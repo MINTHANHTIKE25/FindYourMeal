@@ -1,9 +1,9 @@
-package com.example.findyourmeal.startup.scnmain
+package com.example.findyourmeal.startup.mainlayout
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
 @Composable
-fun SearchScn(navController: NavController) {
+fun FavScn(navController: NavController) {
 
 }

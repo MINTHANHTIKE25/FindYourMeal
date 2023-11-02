@@ -12,14 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.findyourmeal.data.repository.MyRepository
 import com.example.findyourmeal.startup.MainNavSetup
-
 import com.example.findyourmeal.ui.theme.FindYourMealTheme
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
-        val viewModel=MainViewModelForApi(MyRepository())
+        val viewModel = MainViewModelForApi(MyRepository())
         super.onCreate(savedInstanceState)
         setContent {
             FindYourMealTheme {
@@ -28,8 +27,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                   val navController= rememberNavController()
-                   MainNavSetup(navController,viewModel)
+                    val navController = rememberNavController()
+                    MainNavSetup(navController, viewModel)
                 }
             }
         }

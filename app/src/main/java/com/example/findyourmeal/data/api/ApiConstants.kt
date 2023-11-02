@@ -8,12 +8,15 @@ object ApiConstants {
     //end point for list all categories
     const val LIST_ALL_CATEGORIES = "categories.php"
 
+    //search meal by name/by first letter ?f=/
+    const val SEARCH_MEAL_BY_NAME = "search.php"
 
-    //search meal by name
-    const val SEARCH_MEAL_BY_NAME  ="search.php"
-
-
-    //search by meal id
+    //search by meal id ?i=
     const val SEARCH_BY_MEAL_ID = "lookup.php"
 
+    //search meal by area  ?a=
+    const val SEARCH_MEAL_BY_AREA = "filter.php"
+
+    //Filter all area name ?a=list
+    const val ALL_AREA_NAMES = "list.php"
 }
