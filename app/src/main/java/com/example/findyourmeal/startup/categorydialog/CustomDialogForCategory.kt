@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -80,15 +81,16 @@ fun CustomDialogForCategory(
                 )
 
                 AsyncImage(
-                    model = img, contentDescription = "Image", contentScale = ContentScale.Crop,
+                    model = img, contentDescription = "Image",
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .padding(all = 20.dp)
-                        .wrapContentSize()
+                        .size(200.dp),
                 )
 
                 Text(
                     text = description,
-                    fontSize = 20.sp,
+                    style = MaterialTheme.typography.labelLarge,
                     fontStyle = FontStyle.Normal,
                     fontFamily = FontFamily.SansSerif,
                     modifier = Modifier.padding(horizontal = 20.dp)

@@ -17,7 +17,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +28,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.findyourmeal.room.SavedDataViewModelFactory
 import com.example.findyourmeal.ui.theme.PurpleGrey40
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
@@ -36,7 +36,11 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 //Main Screen Setup
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(viewModelForApi: MainViewModelForApi) {
+fun Home(
+    viewModelForApi: MainViewModelForApi,
+    factory: SavedDataViewModelFactory,
+    mainNavController: NavController
+) {
     val navController: NavHostController = rememberNavController()
 
     Scaffold(
@@ -44,8 +48,7 @@ fun Home(viewModelForApi: MainViewModelForApi) {
             BottomNavBar(navController = navController)
         }
     ) { paddingvalues ->
-        paddingvalues
-        MainScnNavGraph(viewModelForApi = viewModelForApi, navController)
+        MainScnNavGraph(viewModelForApi = viewModelForApi, navController, factory,mainNavController)
     }
 }
 
@@ -72,7 +75,7 @@ fun BottomNavBar(navController: NavController) {
 
             Box(
                 modifier = Modifier
-                    .height(60.dp)
+                    .height(40.dp)
                     .clip(CircleShape)
                     .background(background)
                     .clickable {
@@ -82,12 +85,7 @@ fun BottomNavBar(navController: NavController) {
                         }
                     }) {
                 Row(
-                    modifier = Modifier.padding(
-                        start = 10.dp,
-                        end = 20.dp,
-                        top = 8.dp,
-                        bottom = 8.dp
-                    ),
+                    modifier = Modifier.padding(horizontal = 8.dp),
                     verticalAlignment = CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
