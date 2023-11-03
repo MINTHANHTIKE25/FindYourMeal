@@ -36,7 +36,11 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 //Main Screen Setup
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(viewModelForApi: MainViewModelForApi,factory: SavedDataViewModelFactory) {
+fun Home(
+    viewModelForApi: MainViewModelForApi,
+    factory: SavedDataViewModelFactory,
+    mainNavController: NavController
+) {
     val navController: NavHostController = rememberNavController()
 
     Scaffold(
@@ -44,8 +48,7 @@ fun Home(viewModelForApi: MainViewModelForApi,factory: SavedDataViewModelFactory
             BottomNavBar(navController = navController)
         }
     ) { paddingvalues ->
-        paddingvalues
-        MainScnNavGraph(viewModelForApi = viewModelForApi, navController,factory)
+        MainScnNavGraph(viewModelForApi = viewModelForApi, navController, factory,mainNavController)
     }
 }
 
