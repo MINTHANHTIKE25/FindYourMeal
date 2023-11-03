@@ -15,8 +15,10 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun MainNavSetup(navController: NavHostController, viewModelForApi: MainViewModelForApi,
-                 factory: SavedDataViewModelFactory) {
+fun MainNavSetup(
+    navController: NavHostController, viewModelForApi: MainViewModelForApi,
+    factory: SavedDataViewModelFactory
+) {
 
     NavHost(navController = navController, startDestination = StartUpScreen.SplashScreen.route) {
         composable(route = StartUpScreen.SplashScreen.route) {
@@ -26,7 +28,7 @@ fun MainNavSetup(navController: NavHostController, viewModelForApi: MainViewMode
             OnBoardingScn(navController = navController)
         }
         composable(route = StartUpScreen.MainScreen.route) {
-            Home(viewModelForApi,factory)
+            Home(viewModelForApi, factory, navController)
         }
         composable(route = StartUpScreen.DetailScreen.route,
             arguments = listOf(
@@ -39,6 +41,20 @@ fun MainNavSetup(navController: NavHostController, viewModelForApi: MainViewMode
 
             DetailScn(getInt!!, viewModelForApi, navController)
 
+        }
+        composable(route = StartUpScreen.SearchResult.route,
+            arguments = listOf(
+                navArgument(TEXT) {
+                    type = NavType.StringType
+                },
+                navArgument(SEARCH_BY) {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val searchBy = it.arguments?.getString(SEARCH_BY)
+            val searchResult = it.arguments?.getString(TEXT)
+            SearchResult(searchResult!!, viewModelForApi,searchBy!!,navController)
         }
     }
 }

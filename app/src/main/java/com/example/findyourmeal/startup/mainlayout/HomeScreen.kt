@@ -129,7 +129,8 @@ fun EachCategory(
             .wrapContentSize()
             .clickable {
                 showDialog.value = true
-                vmOfRoom.insertData(SavedData(mealId = category.idCategory, title = category.strCategory))
+                vmOfRoom.insertData(SavedData(mealId = category.idCategory,
+                    title = category.strCategory))
             }
             .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
             .width(250.dp)
@@ -142,7 +143,5 @@ fun EachCategory(
                 .padding(top = 15.dp)
         )
         Text(text = category.strCategory, modifier = Modifier.align(Alignment.CenterHorizontally))
-
-
     }
 }

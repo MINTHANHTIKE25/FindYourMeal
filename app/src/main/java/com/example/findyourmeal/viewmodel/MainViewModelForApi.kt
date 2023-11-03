@@ -8,9 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.findyourmeal.data.repository.MyRepository
 import com.example.findyourmeal.model.allcategories.Category
 import com.example.findyourmeal.model.sarchmealbyid.Meal
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainViewModelForApi(private val myRepository: MyRepository) : ViewModel() {
+
     var errorMessage: String by mutableStateOf("")
     var allCategories: List<Category> by mutableStateOf(listOf())
 
@@ -25,6 +27,7 @@ class MainViewModelForApi(private val myRepository: MyRepository) : ViewModel() 
     }
 
     var searchMealById: List<Meal?>? by mutableStateOf(listOf())
+    // var meal  = mutableStateListOf<>()
 
     fun getSearchMealById(search: String) {
         viewModelScope.launch {
@@ -43,6 +46,7 @@ class MainViewModelForApi(private val myRepository: MyRepository) : ViewModel() 
     fun searchMealByName(search: String) {
         viewModelScope.launch {
             try {
+                delay(500)
                 searchMealByName = myRepository.getSearchMealByName(search).meals
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
@@ -82,10 +86,24 @@ class MainViewModelForApi(private val myRepository: MyRepository) : ViewModel() 
         listOf()
     )
 
-    fun getSearchMealByFirstLetter(character: Char) {
+    fun getSearchMealByFirstLetter(character: String) {
         viewModelScope.launch {
             try {
                 searchMealByFirstLetter = myRepository.getSearchByFirstLetter(character).meals
+            } catch (e: Exception) {
+                errorMessage = e.message.toString()
+            }
+        }
+    }
+
+    var filterByCategory: List<com.example.findyourmeal.model.searchbycategory.Meal?>? by mutableStateOf(
+        listOf()
+    )
+
+    fun getMealByCategory(category: String) {
+        viewModelScope.launch {
+            try {
+                filterByCategory = myRepository.getMealFilterByCategory(category).meals
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
             }
