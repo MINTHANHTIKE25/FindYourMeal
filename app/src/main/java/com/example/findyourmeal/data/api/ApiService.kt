@@ -3,6 +3,7 @@ package com.example.findyourmeal.data.api
 import com.example.findyourmeal.model.allcategories.ListAllCategories
 import com.example.findyourmeal.model.listofallarea.ListOfArea
 import com.example.findyourmeal.model.sarchmealbyid.SearchMealById
+import com.example.findyourmeal.model.searchbycategory.SearchByCategory
 import com.example.findyourmeal.model.searchbyfirstletter.SearchByFirstLetter
 import com.example.findyourmeal.model.searchmealbyarea.SearchMealByArea
 import com.example.findyourmeal.model.searchmealbyname.SearchMealByName
@@ -40,7 +41,7 @@ interface ApiService {
     /**
      * Getting meal with Area
      */
-    @GET(ApiConstants.SEARCH_MEAL_BY_AREA)
+    @GET(ApiConstants.FILTER_BY)
     suspend fun getSearchMealByArea(
         @Query("a")
         searchArea: String
@@ -56,12 +57,21 @@ interface ApiService {
     ): ListOfArea
 
     /**
-     * Searching meal with Meal name
+     * Searching meal with first letter
      */
     @GET(ApiConstants.SEARCH_MEAL_BY_NAME)
     suspend fun getSearchMealByFirstLetter(
         @Query("f")
-        searchMealByName: Char
+        searchMealByName: String
     ): SearchByFirstLetter
+
+    /**
+     * Filter by category
+     */
+    @GET(ApiConstants.FILTER_BY)
+    suspend fun getMealFilterByCategory(
+        @Query("c")
+        category : String
+    ) : SearchByCategory
 
 }

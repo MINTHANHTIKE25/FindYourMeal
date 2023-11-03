@@ -14,8 +14,8 @@ object ApiConstants {
     //search by meal id ?i=
     const val SEARCH_BY_MEAL_ID = "lookup.php"
 
-    //search meal by area  ?a=
-    const val SEARCH_MEAL_BY_AREA = "filter.php"
+    //search meal by area  ?a= /category ?c=
+    const val FILTER_BY = "filter.php"
 
     //Filter all area name ?a=list
     const val ALL_AREA_NAMES = "list.php"
