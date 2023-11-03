@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.findyourmeal.room.SavedDataViewModelFactory
+import com.example.findyourmeal.startup.mainlayout.detailscreen.DetailScn
 import com.example.findyourmeal.startup.mainlayout.mainscreen.Home
 import com.example.findyourmeal.startup.onboarding.OnBoardingScn
 import com.example.findyourmeal.viewmodel.MainViewModelForApi

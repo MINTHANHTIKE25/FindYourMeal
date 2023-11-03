@@ -20,11 +20,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.findyourmeal.R
 import com.example.findyourmeal.startup.SEARCH_BY
 import com.example.findyourmeal.startup.StartUpScreen
 import com.example.findyourmeal.startup.TEXT
@@ -50,7 +52,7 @@ fun Meals(
                 .fillMaxSize()
         ) {
             Text(
-                text = "Meal List", fontSize = 20.sp,
+                text = stringResource(id = R.string.filter_by_category), fontSize = 20.sp,
                 fontFamily = FontFamily.SansSerif,
                 modifier = Modifier.padding(start = 20.dp)
             )
@@ -80,16 +82,21 @@ fun Meals(
                         Row {
                             AsyncImage(
                                 model = item.strMealThumb, contentDescription = "image",
-                                modifier = Modifier.size(180.dp)
+                                modifier = Modifier.size(150.dp).padding(10.dp)
                             )
-                            Column {
+                            Column(
+                                modifier = Modifier.padding(all = 10.dp),
+                                verticalArrangement = Arrangement.SpaceEvenly,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
                                 Text(
-                                    text = item.strArea!!,
+                                    text = "Meal name : ${item.strArea!!}",
                                     fontFamily = FontFamily.Serif,
                                     modifier = Modifier.padding(all = 10.dp)
                                 )
                                 Text(
-                                    text = item.idMeal!!, fontFamily = FontFamily.Serif,
+                                    text = "Meal Id : ${item.idMeal!!}",
+                                    fontFamily = FontFamily.Serif,
                                     modifier = Modifier.padding(all = 10.dp)
                                 )
                             }

@@ -29,7 +29,7 @@ fun MainScnNavGraph(viewModelForApi: MainViewModelForApi, navController: NavHost
             FavScn(navController,factory)
         }
         composable(BottomNaviRoutes.SettingScreen.routes) {
-            SettingScn(navController)
+            SettingScn()
         }
     }
 }
