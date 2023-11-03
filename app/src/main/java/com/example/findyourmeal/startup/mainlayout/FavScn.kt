@@ -1,9 +1,7 @@
 package com.example.findyourmeal.startup.mainlayout
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
+import android.opengl.Visibility
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -21,18 +19,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckBox
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.outlined.CheckBoxOutlineBlank
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DismissDirection
@@ -45,31 +39,30 @@ import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.findyourmeal.R
+import com.example.findyourmeal.room.SavedData
 import com.example.findyourmeal.room.SavedDataViewModel
 import com.example.findyourmeal.room.SavedDataViewModelFactory
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.findyourmeal.room.SavedData
-import kotlinx.coroutines.flow.toCollection
-import kotlinx.coroutines.selects.select
+import com.example.findyourmeal.startup.MEAL
+import com.example.findyourmeal.startup.StartUpScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -97,7 +90,7 @@ fun FavScn(
                     modifier = Modifier.height(60.dp)
                 ) {
                     Text(
-                        text = "Your favourite",
+                        text = stringResource(id = R.string.your_fav),
                         modifier = Modifier
                             .weight(1f)
                             .padding(start = 14.dp)
@@ -110,16 +103,26 @@ fun FavScn(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             if (isLongCLick) {
-                                Text(text = "Select All")
+
                                 IconButton(onClick = { selectAllClick = !selectAllClick }) {
                                     Icon(
                                         imageVector = if (selectAllClick) {
-                                            Icons.Filled.CheckBox
+                                            Icons.Filled.SelectAll
                                         } else {
                                             Icons.Outlined.CheckBoxOutlineBlank
                                         },
                                         contentDescription = null
                                     )
+                                }
+                                if (!selectAllClick) {
+                                    Text(text = "Select All")
+                                } else {
+                                    IconButton(onClick = { viewModelFromRoom.deleteAll() }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = null
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -149,7 +152,7 @@ fun FavScn(
                 state = dismissState,
                 //this background is the background of items when we swipe
                 background = {
-                        SwipeBackground(dismissState = dismissState)
+                    SwipeBackground(dismissState = dismissState)
                 },
                 dismissContent = {
                     EachFav(
@@ -157,7 +160,8 @@ fun FavScn(
                         isLongClick = isLongCLick,
                         mealTitle = item.title,
                         onLongClicking = { isLongCLick = !isLongCLick },
-                        item = item
+                        photosUrl = item.photosUrl,
+                        navController = navController
                     )
                 })
 
@@ -173,7 +177,8 @@ fun EachFav(
     isLongClick: Boolean,
     mealTitle: String,
     onLongClicking: () -> Unit,
-    item: SavedData
+    photosUrl: String,
+    navController: NavController
 ) {
     var isLongOnClick by rememberSaveable { mutableStateOf(false) }
     Card(
@@ -188,14 +193,21 @@ fun EachFav(
                     onLongClicking();
                     isLongOnClick = !isLongClick
                 }
-            ) { }
+            ) {
+                navController.navigate(
+                    StartUpScreen.DetailScreen.route.replace(
+                        "{$MEAL}",
+                        "${mealId.toInt()}"
+                    )
+                )
+            }
     ) {
         Row {
             Box(modifier = Modifier.weight(0.4f)) {
-                Image(
-                    painter = painterResource(id = R.drawable.eat_img),
+                AsyncImage(
+                    model = photosUrl,
                     contentDescription = null,
-                    modifier = Modifier.fillMaxWidth()
+                    contentScale = ContentScale.FillBounds
                 )
             }
             Box(
@@ -205,32 +217,10 @@ fun EachFav(
             ) {
                 if (isLongClick) {
                     if (isSelectAll) {
-                        androidx.compose.animation.AnimatedVisibility(
-                            visible = true,
-                            enter = fadeIn(),
-                            exit = fadeOut(),
-                            modifier = Modifier.align(Alignment.TopEnd)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = null
-                            )
-                        }
+                        ShowHide(visibility = true, modifier = Modifier.align(Alignment.TopEnd))
                     } else {
-                        androidx.compose.animation.AnimatedVisibility(
-                            visible = false,
-                            enter = fadeIn(),
-                            exit = fadeOut(),
-                            modifier = Modifier.align(Alignment.TopEnd)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = null
-                            )
-                        }
+                        ShowHide(visibility = false, modifier = Modifier.align(Alignment.TopEnd))
                     }
-
-
                 }
                 Column {
                     Text(text = mealTitle)
@@ -239,6 +229,21 @@ fun EachFav(
 
             }
         }
+    }
+}
+
+@Composable
+fun ShowHide(visibility: Boolean, modifier: Modifier) {
+    androidx.compose.animation.AnimatedVisibility(
+        visible = visibility,
+        enter = fadeIn(),
+        exit = fadeOut(),
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = Icons.Default.CheckBox,
+            contentDescription = null
+        )
     }
 }
 
