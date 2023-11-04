@@ -18,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -52,6 +53,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.findyourmeal.R
 import com.example.findyourmeal.model.sarchmealbyid.Meal
+import com.example.findyourmeal.room.SavedData
 import com.example.findyourmeal.room.SavedDataViewModel
 import com.example.findyourmeal.room.SavedDataViewModelFactory
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
@@ -71,12 +73,11 @@ fun DetailScn(
             meal = viewModelForApi.searchMealById
             viewModelForApi.getSearchMealById(search.toString())
         }
-    }
-    else {
+    } else {
 
         meal = viewModelForApi.searchMealById!!.filterNotNull()
 
-        Log.d("get",meal.toString())
+        Log.d("get", meal.toString())
 
         viewModelForApi.getSearchMealById(search.toString())
 
@@ -98,11 +99,11 @@ fun DetailScn(
         ingredients.add(meal!![0]?.strIngredient13!!)
         ingredients.add(meal!![0]?.strIngredient14!!)
         ingredients.add(meal!![0]?.strIngredient15!!)
-        checkNullIngredient("${meal!![0]?.strIngredient16}",ingredients)
-        checkNullIngredient("${meal!![0]?.strIngredient17}",ingredients)
-        checkNullIngredient("${meal!![0]?.strIngredient18}",ingredients)
-        checkNullIngredient("${meal!![0]?.strIngredient19}",ingredients)
-        checkNullIngredient("${meal!![0]?.strIngredient20}",ingredients)
+        checkNullIngredient("${meal!![0]?.strIngredient16}", ingredients)
+        checkNullIngredient("${meal!![0]?.strIngredient17}", ingredients)
+        checkNullIngredient("${meal!![0]?.strIngredient18}", ingredients)
+        checkNullIngredient("${meal!![0]?.strIngredient19}", ingredients)
+        checkNullIngredient("${meal!![0]?.strIngredient20}", ingredients)
 
 
         val measurements = mutableListOf<Any?>()
@@ -122,11 +123,11 @@ fun DetailScn(
         measurements.add(meal!![0]?.strMeasure13!!)
         measurements.add(meal!![0]?.strMeasure14!!)
         measurements.add(meal!![0]?.strMeasure15!!)
-        checkNullMeasurement("${meal!![0]?.strMeasure16}",measurements)
-        checkNullMeasurement("${meal!![0]?.strMeasure17}",measurements)
-        checkNullMeasurement("${meal!![0]?.strMeasure18}",measurements)
-        checkNullMeasurement("${meal!![0]?.strMeasure19}",measurements)
-        checkNullMeasurement("${meal!![0]?.strMeasure20}",measurements)
+        checkNullMeasurement("${meal!![0]?.strMeasure16}", measurements)
+        checkNullMeasurement("${meal!![0]?.strMeasure17}", measurements)
+        checkNullMeasurement("${meal!![0]?.strMeasure18}", measurements)
+        checkNullMeasurement("${meal!![0]?.strMeasure19}", measurements)
+        checkNullMeasurement("${meal!![0]?.strMeasure20}", measurements)
 
 
         val mealIngredientAndMeasurement = mutableListOf<IngredientsAndMeasurements>()
@@ -141,7 +142,9 @@ fun DetailScn(
         }
 
         val afterFilter =
-            mealIngredientAndMeasurement.filter { (ingredient, measurement) -> ingredient.isNotEmpty() && measurement.isNotEmpty() }
+            mealIngredientAndMeasurement.filter { (ingredient, measurement) ->
+                ingredient.isNotEmpty() && measurement.isNotEmpty()
+            }
 
         Scaffold(
             topBar = {
@@ -155,25 +158,37 @@ fun DetailScn(
                     IconButton(onClick = { mainNavController.popBackStack() }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
-                },
-                    actions = {
-                        IconButton(onClick = { /*TODO*/ }) {
-
-                        var addToFav by remember{ mutableStateOf(false) }
-                        IconButton(onClick = {
-                            addToFav =!addToFav
-                            if (addToFav){
-
+                }, actions = {
+                    var addToFav by remember { mutableStateOf(false) }
+                    val favItems = meal!![0]
+                    IconButton(onClick = {
+                        addToFav = !addToFav
+                        if (addToFav) {
+                            if (favItems != null) {
+                                viewModelFromRoom.insertData(
+                                    SavedData(
+                                        mealId = favItems.idMeal.toString(),
+                                        title = favItems.strMeal.toString(),
+                                        photosUrl = favItems.strMealThumb.toString()
+                                    )
+                                )
                             }
-                        }) {
+                        }
+                    }) {
+                        if (addToFav) {
                             Icon(
                                 imageVector = Icons.Filled.Favorite,
                                 contentDescription = "Favourite"
                             )
+
+                        } else {
+                            Icon(
+                                imageVector = Icons.Filled.FavoriteBorder,
+                                contentDescription = "Favourite"
+                            )
                         }
                     }
-                )
-
+                })
             }
         ) { paddingValues ->
 
@@ -248,7 +263,9 @@ fun DetailScn(
                             Text(
                                 text = item.ingredient,
                                 fontFamily = FontFamily.Serif,
-                                modifier = Modifier.weight(1f).padding(start = 20.dp),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(start = 20.dp),
                                 textAlign = TextAlign.Start
                             )
                             Text(
@@ -271,16 +288,17 @@ fun DetailScn(
 }
 
 fun checkNullMeasurement(string: String?, measurements: MutableList<Any?>) {
-    if (string.equals("null",true)){
+    if (string.equals("null", true)) {
         measurements.add("")
-    }else{
+    } else {
         measurements.add(string.toString())
     }
 }
+
 fun checkNullIngredient(string: Any?, ingredients: MutableList<Any?>) {
-    if (string== null){
+    if (string == null) {
         ingredients.add("")
-    }else{
+    } else {
         ingredients.add(string.toString())
     }
 }
@@ -293,6 +311,7 @@ fun Instruction(instruction: String) {
         modifier = Modifier.padding(all = 20.dp)
     )
 }
+
 @Composable
 fun ForYouTube(link: String) {
     Row(

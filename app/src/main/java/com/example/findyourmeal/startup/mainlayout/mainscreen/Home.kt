@@ -33,16 +33,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.findyourmeal.connectivity.ConnectivityObserver
 import com.example.findyourmeal.room.SavedDataViewModelFactory
-import com.example.findyourmeal.shimmer.AnimatedShimmer
-import com.example.findyourmeal.ui.theme.PurpleGrey40
 import com.example.findyourmeal.savinginmemory.SharedPrefManager
 import com.example.findyourmeal.ui.theme.md_theme_dark_secondaryContainer
 import com.example.findyourmeal.ui.theme.md_theme_light_primary
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
-
-//Main Screen Setup
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Home(
     viewModelForApi: MainViewModelForApi,

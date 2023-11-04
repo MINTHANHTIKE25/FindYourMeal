@@ -76,95 +76,97 @@ fun FavScn(
     val allSavedData = viewModelFromRoom.allSavedData.collectAsState(initial = emptyList())
 //    val allSavedMutable= allSavedData.value.toMutableStateList()
     var selectAllClick by rememberSaveable { mutableStateOf(false) }
-    LazyColumn(
-        modifier = Modifier.padding(bottom = 70.dp),
-        state = rememberLazyListState()
-    ) {
-        item {
-            Card(
-                modifier = Modifier.wrapContentSize(),
-                shape = RoundedCornerShape(bottomStart = 15.dp, bottomEnd = 15.dp)
+    Column {
+        Card(
+            modifier = Modifier.wrapContentSize(),
+            shape = RoundedCornerShape(bottomStart = 15.dp, bottomEnd = 15.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.height(60.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.height(60.dp)
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.your_fav),
+                Text(
+                    text = stringResource(id = R.string.your_fav),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 14.dp)
+                )
+                Box {
+                    Row(
                         modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 14.dp)
-                    )
-                    Box {
-                        Row(
-                            modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                                .padding(end = 5.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            if (isLongCLick) {
+                            .align(Alignment.CenterEnd)
+                            .padding(end = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (isLongCLick) {
 
-                                IconButton(onClick = { selectAllClick = !selectAllClick }) {
+                            IconButton(onClick = { selectAllClick = !selectAllClick }) {
+                                Icon(
+                                    imageVector = if (selectAllClick) {
+                                        Icons.Filled.SelectAll
+                                    } else {
+                                        Icons.Outlined.CheckBoxOutlineBlank
+                                    },
+                                    contentDescription = null
+                                )
+                            }
+                            if (!selectAllClick) {
+                                Text(text = "Select All")
+                            } else {
+                                IconButton(onClick = { viewModelFromRoom.deleteAll() }) {
                                     Icon(
-                                        imageVector = if (selectAllClick) {
-                                            Icons.Filled.SelectAll
-                                        } else {
-                                            Icons.Outlined.CheckBoxOutlineBlank
-                                        },
+                                        imageVector = Icons.Default.Delete,
                                         contentDescription = null
                                     )
-                                }
-                                if (!selectAllClick) {
-                                    Text(text = "Select All")
-                                } else {
-                                    IconButton(onClick = { viewModelFromRoom.deleteAll() }) {
-                                        Icon(
-                                            imageVector = Icons.Default.Delete,
-                                            contentDescription = null
-                                        )
-                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-
         }
-        items(items = allSavedData.value,
-            key = { item: SavedData -> item.tbId })
-        { item: SavedData ->
-            val currentItem by rememberUpdatedState(item)
-            val dismissState = rememberDismissState(
-                confirmValueChange = {
-                    if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
-                        viewModelFromRoom.deleteSavedData(currentItem)
-                        true
-                    } else false
-                }
-            )
-            if (dismissState.isDismissed(DismissDirection.EndToStart) ||
-                dismissState.isDismissed(DismissDirection.StartToEnd)
-            ) {
-                viewModelFromRoom.deleteSavedData(item)
-            }
-            SwipeToDismiss(
-                state = dismissState,
-                //this background is the background of items when we swipe
-                background = {
-                    SwipeBackground(dismissState = dismissState)
-                },
-                dismissContent = {
-                    EachFav(
-                        mealId = item.mealId, isSelectAll = selectAllClick,
-                        isLongClick = isLongCLick,
-                        mealTitle = item.title,
-                        onLongClicking = { isLongCLick = !isLongCLick },
-                        photosUrl = item.photosUrl,
-                        navController = navController
-                    )
-                })
 
+
+        LazyColumn(
+            modifier = Modifier.padding(bottom = 70.dp),
+            state = rememberLazyListState()
+        ) {
+            item {}
+            items(items = allSavedData.value,
+                key = { item: SavedData -> item.tbId })
+            { item: SavedData ->
+                val currentItem by rememberUpdatedState(item)
+                val dismissState = rememberDismissState(
+                    confirmValueChange = {
+                        if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
+                            viewModelFromRoom.deleteSavedData(currentItem)
+                            true
+                        } else false
+                    }
+                )
+                if (dismissState.isDismissed(DismissDirection.EndToStart) ||
+                    dismissState.isDismissed(DismissDirection.StartToEnd)
+                ) {
+                    viewModelFromRoom.deleteSavedData(item)
+                }
+                SwipeToDismiss(
+                    state = dismissState,
+                    //this background is the background of items when we swipe
+                    background = {
+                        SwipeBackground(dismissState = dismissState)
+                    },
+                    dismissContent = {
+                        EachFav(
+                            mealId = item.mealId, isSelectAll = selectAllClick,
+                            isLongClick = isLongCLick,
+                            mealTitle = item.title,
+                            onLongClicking = { isLongCLick = !isLongCLick },
+                            photosUrl = item.photosUrl,
+                            navController = navController
+                        )
+                    })
+
+            }
         }
     }
 }

@@ -31,7 +31,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingScn() {
+fun SettingScn(sharedPrefManager: SharedPrefManager,localeViewModel : LocaleViewModel,navController: NavController) {
     
     Scaffold(
         topBar = {
