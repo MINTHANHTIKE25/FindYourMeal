@@ -2,6 +2,8 @@ package com.example.findyourmeal.startup.mainlayout
 
 import android.app.Activity
 import android.content.SharedPreferences
+import android.content.Context
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -29,18 +31,15 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingScn(navController: NavController, localeViewModel: LocaleViewModel,
-               sharedPrefManager: SharedPrefManager) {
-
+fun SettingScn() {
+    
     Scaffold(
         topBar = {
-            TopAppBar(title = { stringResource(id = R.string.settings) })
+            TopAppBar(title = { stringResource(id = R.string.settings)})
         }
-    ) { paddingValues ->
+    ) {paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+            modifier = Modifier.fillMaxSize().padding(paddingValues)
         ) {
             Text(
                 text = stringResource(id = R.string.select_language),
@@ -90,4 +89,5 @@ fun SettingScn(navController: NavController, localeViewModel: LocaleViewModel,
 
     }
 
+          
 }

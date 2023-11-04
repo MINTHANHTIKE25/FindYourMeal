@@ -28,6 +28,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.Start
@@ -43,10 +47,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.findyourmeal.R
 import com.example.findyourmeal.model.sarchmealbyid.Meal
+import com.example.findyourmeal.room.SavedDataViewModel
+import com.example.findyourmeal.room.SavedDataViewModelFactory
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,11 +61,11 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 fun DetailScn(
     search: Int,
     viewModelForApi: MainViewModelForApi,
-    mainNavController: NavController
+    mainNavController: NavController,
+    factory: SavedDataViewModelFactory,
+    viewModelFromRoom: SavedDataViewModel = viewModel(factory = factory)
 ) {
-
-
-    var meal : List<Meal?>?
+    var meal: List<Meal?>?
     if (viewModelForApi.searchMealById.isNullOrEmpty()) {
         LaunchedEffect(Unit) {
             meal = viewModelForApi.searchMealById
@@ -66,6 +73,7 @@ fun DetailScn(
         }
     }
     else {
+
         meal = viewModelForApi.searchMealById!!.filterNotNull()
 
         Log.d("get",meal.toString())
@@ -74,6 +82,7 @@ fun DetailScn(
 
 
         val ingredients = mutableListOf<Any?>()
+
         ingredients.add(meal!![0]?.strIngredient1!!)
         ingredients.add(meal!![0]?.strIngredient2!!)
         ingredients.add(meal!![0]?.strIngredient3!!)
@@ -97,6 +106,7 @@ fun DetailScn(
 
 
         val measurements = mutableListOf<Any?>()
+
         measurements.add(meal!![0]?.strMeasure1!!)
         measurements.add(meal!![0]?.strMeasure2!!)
         measurements.add(meal!![0]?.strMeasure3!!)
@@ -117,6 +127,7 @@ fun DetailScn(
         checkNullMeasurement("${meal!![0]?.strMeasure18}",measurements)
         checkNullMeasurement("${meal!![0]?.strMeasure19}",measurements)
         checkNullMeasurement("${meal!![0]?.strMeasure20}",measurements)
+
 
         val mealIngredientAndMeasurement = mutableListOf<IngredientsAndMeasurements>()
 
@@ -147,6 +158,14 @@ fun DetailScn(
                 },
                     actions = {
                         IconButton(onClick = { /*TODO*/ }) {
+
+                        var addToFav by remember{ mutableStateOf(false) }
+                        IconButton(onClick = {
+                            addToFav =!addToFav
+                            if (addToFav){
+
+                            }
+                        }) {
                             Icon(
                                 imageVector = Icons.Filled.Favorite,
                                 contentDescription = "Favourite"
@@ -192,7 +211,9 @@ fun DetailScn(
                 )
 
                 Row(
-                    modifier = Modifier.padding(all = 10.dp).fillMaxSize()
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier.padding(all = 10.dp)
+
                 ) {
                     Text(
                         text = "Ingredients",
@@ -200,6 +221,8 @@ fun DetailScn(
                         modifier = Modifier.padding(start = 20.dp, top = 10.dp, bottom = 10.dp),
                         style = MaterialTheme.typography.headlineMedium,
                         textAlign = TextAlign.Start
+
+
                     )
                     Text(
                         text = "Measurements",
@@ -210,7 +233,9 @@ fun DetailScn(
                 }
 
                 afterFilter.forEach { item ->
-                    Box(
+
+                    Card(
+
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(all = 10.dp)
@@ -229,8 +254,8 @@ fun DetailScn(
                             Text(
                                 text = item.measurement,
                                 fontFamily = FontFamily.Serif,
-                                modifier = Modifier.weight(1f),
-                                textAlign = TextAlign.Start
+                                modifier = Modifier.padding(horizontal = 50.dp),
+                                textAlign = TextAlign.End
                             )
                         }
                     }
@@ -259,6 +284,7 @@ fun checkNullIngredient(string: Any?, ingredients: MutableList<Any?>) {
         ingredients.add(string.toString())
     }
 }
+
 
 @Composable
 fun Instruction(instruction: String) {

@@ -86,6 +86,7 @@ fun Area(
                         fontFamily = FontFamily.Serif,
                         modifier = Modifier.align(CenterHorizontally).padding(top = 5.dp),
                         textAlign = TextAlign.Center
+
                     )
                 }
             }

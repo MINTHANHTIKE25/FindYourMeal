@@ -55,8 +55,7 @@ fun Meals(
                 .fillMaxSize()
         ) {
             Text(
-                text = stringResource(id = R.string.filter_by_category),
-                fontSize = 20.sp,
+                text = stringResource(id = R.string.filter_by_category), fontSize = 20.sp,
                 fontFamily = FontFamily.SansSerif,
                 modifier = Modifier.padding(start = 20.dp)
             )
@@ -94,6 +93,7 @@ fun Meals(
                             Column(
                                 modifier = Modifier.padding(all = 10.dp).fillMaxSize(),
                                 verticalArrangement = Arrangement.SpaceEvenly
+
                             ) {
                                 Text(
                                     text = "Meal name : ${item.strArea!!}",
@@ -106,6 +106,7 @@ fun Meals(
                                     fontFamily = FontFamily.Serif,
                                     modifier = Modifier.padding(start = 10.dp, top = 10.dp),
                                     textAlign = TextAlign.Start
+
                                 )
                             }
                         }

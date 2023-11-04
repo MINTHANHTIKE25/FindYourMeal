@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -34,6 +35,9 @@ import com.example.findyourmeal.connectivity.ConnectivityObserver
 import com.example.findyourmeal.room.SavedDataViewModelFactory
 import com.example.findyourmeal.shimmer.AnimatedShimmer
 import com.example.findyourmeal.ui.theme.PurpleGrey40
+import com.example.findyourmeal.savinginmemory.SharedPrefManager
+import com.example.findyourmeal.ui.theme.md_theme_dark_secondaryContainer
+import com.example.findyourmeal.ui.theme.md_theme_light_primary
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 
@@ -70,11 +74,15 @@ fun Home(
 fun BottomNavBar(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-
+    val isDarkMode=SharedPrefManager(LocalContext.current).retrieveBoolean("DARKMODE",false)
     Row(
         modifier = Modifier
             .height(80.dp)
-            .background(Color.White)
+            .background(if (isDarkMode){
+                md_theme_dark_secondaryContainer
+            }else{
+                md_theme_light_primary
+            })
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = CenterVertically
@@ -83,9 +91,9 @@ fun BottomNavBar(navController: NavController) {
             val selected =
                 currentDestination?.hierarchy?.any { it.route == screen.route } == true
 
-            val contentColor = if (selected) Color.White else Color.Black
+            val contentColor = if (selected) Color.White else Color.White
 
-            val background = if (selected) PurpleGrey40.copy(0.3f) else Color.Transparent
+            val background = if (selected) Color.White.copy(0.3f) else Color.Transparent
 
             Box(
                 modifier = Modifier

@@ -17,6 +17,7 @@ data class Meal(
     val strIngredient19: Any?,
     val strIngredient2: String?="",
     val strIngredient20: Any?,
+
     val strIngredient3: String?="",
     val strIngredient4: String?="",
     val strIngredient5: String?="",
@@ -40,6 +41,7 @@ data class Meal(
     val strMeasure19: Any? ,
     val strMeasure2: String?="",
     val strMeasure20: Any?,
+
     val strMeasure3: String?="",
     val strMeasure4: String?="",
     val strMeasure5: String?="",

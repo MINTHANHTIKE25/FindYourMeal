@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
+import com.example.findyourmeal.savinginmemory.SharedPrefManager
+import com.example.findyourmeal.ui.theme.md_theme_dark_onBackground
+import com.example.findyourmeal.ui.theme.md_theme_light_onSurfaceVariant
 
 @Composable
 fun CustomDialogForCategory(
@@ -39,7 +43,7 @@ fun CustomDialogForCategory(
     description: String,
     onDismissDialog: (Boolean) -> Unit
 ) {
-
+    val isDarkMode=SharedPrefManager(LocalContext.current).retrieveBoolean("DARKMODE",false)
     var active by remember{
         mutableStateOf(false)
     }
@@ -68,7 +72,11 @@ fun CustomDialogForCategory(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.LightGray)
+                    .background(if (isDarkMode){
+                        md_theme_light_onSurfaceVariant
+                    }else{
+                        md_theme_dark_onBackground
+                    })
                     .clip(MaterialTheme.shapes.medium),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally

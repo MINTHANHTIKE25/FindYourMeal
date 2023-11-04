@@ -4,11 +4,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -175,7 +175,7 @@ fun SearchResult(
                         items(searchByMealCategory!!) { item ->
                             Card(modifier = Modifier
                                 .padding(all = 10.dp)
-                                .fillMaxSize()
+                                .fillMaxSize()               
                                 .clickable {
                                     navController.navigate(
                                         StartUpScreen.DetailScreen.route.replace(
@@ -200,6 +200,7 @@ fun SearchResult(
                                     ) {
                                         Text(
                                             text = "Meal Name : ${item?.strMeal}",
+
                                             modifier = Modifier.padding(all = 10.dp),
                                             textAlign = TextAlign.Start
                                         )
@@ -237,6 +238,7 @@ fun SearchResult(
                     TopAppBar(title = {
                         Text(
                             text = "${stringResource(id = R.string.result)} $searchBy",
+
                             modifier = Modifier.padding(start = 20.dp),
                             fontFamily = FontFamily.Serif
                         )
@@ -281,7 +283,6 @@ fun SearchResult(
                                             .size(150.dp)
                                             .padding(10.dp)
                                             .clip(MaterialTheme.shapes.medium)
-
                                     )
                                     Column(
                                         verticalArrangement = Arrangement.SpaceEvenly,

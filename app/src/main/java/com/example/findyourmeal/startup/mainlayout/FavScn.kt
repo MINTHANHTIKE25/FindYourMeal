@@ -1,5 +1,6 @@
 package com.example.findyourmeal.startup.mainlayout
 
+import android.opengl.Visibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
@@ -24,6 +25,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckBox
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.outlined.CheckBoxOutlineBlank
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -47,15 +49,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.findyourmeal.R
 import com.example.findyourmeal.room.SavedData
 import com.example.findyourmeal.room.SavedDataViewModel
 import com.example.findyourmeal.room.SavedDataViewModelFactory
+import com.example.findyourmeal.startup.MEAL
+import com.example.findyourmeal.startup.StartUpScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,16 +103,26 @@ fun FavScn(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             if (isLongCLick) {
-                                Text(text = "Select All")
+
                                 IconButton(onClick = { selectAllClick = !selectAllClick }) {
                                     Icon(
                                         imageVector = if (selectAllClick) {
-                                            Icons.Filled.CheckBox
+                                            Icons.Filled.SelectAll
                                         } else {
                                             Icons.Outlined.CheckBoxOutlineBlank
                                         },
                                         contentDescription = null
                                     )
+                                }
+                                if (!selectAllClick) {
+                                    Text(text = "Select All")
+                                } else {
+                                    IconButton(onClick = { viewModelFromRoom.deleteAll() }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = null
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -143,7 +160,8 @@ fun FavScn(
                         isLongClick = isLongCLick,
                         mealTitle = item.title,
                         onLongClicking = { isLongCLick = !isLongCLick },
-                        item = item
+                        photosUrl = item.photosUrl,
+                        navController = navController
                     )
                 })
 
@@ -159,7 +177,8 @@ fun EachFav(
     isLongClick: Boolean,
     mealTitle: String,
     onLongClicking: () -> Unit,
-    item: SavedData
+    photosUrl: String,
+    navController: NavController
 ) {
     var isLongOnClick by rememberSaveable { mutableStateOf(false) }
     Card(
@@ -174,14 +193,21 @@ fun EachFav(
                     onLongClicking();
                     isLongOnClick = !isLongClick
                 }
-            ) { }
+            ) {
+                navController.navigate(
+                    StartUpScreen.DetailScreen.route.replace(
+                        "{$MEAL}",
+                        "${mealId.toInt()}"
+                    )
+                )
+            }
     ) {
         Row {
             Box(modifier = Modifier.weight(0.4f)) {
-                Image(
-                    painter = painterResource(id = R.drawable.eat_img),
+                AsyncImage(
+                    model = photosUrl,
                     contentDescription = null,
-                    modifier = Modifier.fillMaxWidth()
+                    contentScale = ContentScale.FillBounds
                 )
             }
             Box(
@@ -191,32 +217,10 @@ fun EachFav(
             ) {
                 if (isLongClick) {
                     if (isSelectAll) {
-                        androidx.compose.animation.AnimatedVisibility(
-                            visible = true,
-                            enter = fadeIn(),
-                            exit = fadeOut(),
-                            modifier = Modifier.align(Alignment.TopEnd)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = null
-                            )
-                        }
+                        ShowHide(visibility = true, modifier = Modifier.align(Alignment.TopEnd))
                     } else {
-                        androidx.compose.animation.AnimatedVisibility(
-                            visible = false,
-                            enter = fadeIn(),
-                            exit = fadeOut(),
-                            modifier = Modifier.align(Alignment.TopEnd)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = null
-                            )
-                        }
+                        ShowHide(visibility = false, modifier = Modifier.align(Alignment.TopEnd))
                     }
-
-
                 }
                 Column {
                     Text(text = mealTitle)
@@ -225,6 +229,21 @@ fun EachFav(
 
             }
         }
+    }
+}
+
+@Composable
+fun ShowHide(visibility: Boolean, modifier: Modifier) {
+    androidx.compose.animation.AnimatedVisibility(
+        visible = visibility,
+        enter = fadeIn(),
+        exit = fadeOut(),
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = Icons.Default.CheckBox,
+            contentDescription = null
+        )
     }
 }
 

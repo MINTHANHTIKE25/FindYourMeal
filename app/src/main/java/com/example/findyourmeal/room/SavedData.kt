@@ -9,4 +9,5 @@ data class SavedData(
     var tbId:Int=0,
     var mealId:String,
     var title:String,
+    var photosUrl:String
 )
