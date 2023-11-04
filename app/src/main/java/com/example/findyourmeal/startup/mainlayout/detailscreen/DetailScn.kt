@@ -26,6 +26,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.Start
@@ -40,10 +44,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.findyourmeal.R
 import com.example.findyourmeal.model.sarchmealbyid.Meal
+import com.example.findyourmeal.room.SavedDataViewModel
+import com.example.findyourmeal.room.SavedDataViewModelFactory
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +58,9 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 fun DetailScn(
     search: Int,
     viewModelForApi: MainViewModelForApi,
-    mainNavController: NavController
+    mainNavController: NavController,
+    factory: SavedDataViewModelFactory,
+    viewModelFromRoom: SavedDataViewModel = viewModel(factory = factory)
 ) {
 
     var meal: List<Meal?>?
@@ -139,7 +148,13 @@ fun DetailScn(
                     }
                 },
                     actions = {
-                        IconButton(onClick = { /*TODO*/ }) {
+                        var addToFav by remember{ mutableStateOf(false) }
+                        IconButton(onClick = {
+                            addToFav =!addToFav
+                            if (addToFav){
+
+                            }
+                        }) {
                             Icon(
                                 imageVector = Icons.Filled.Favorite,
                                 contentDescription = "Favourite"

@@ -1,5 +1,6 @@
 package com.example.findyourmeal
 
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -15,6 +16,7 @@ import com.example.findyourmeal.room.DbCreation
 import com.example.findyourmeal.room.SavedDataRepo
 import com.example.findyourmeal.room.SavedDataViewModel
 import com.example.findyourmeal.room.SavedDataViewModelFactory
+import com.example.findyourmeal.savinginmemory.SharedPrefManager
 import com.example.findyourmeal.startup.MainNavSetup
 import com.example.findyourmeal.ui.theme.FindYourMealTheme
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
@@ -22,12 +24,20 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
+        //saving the dark mode state
+        val sharedPrefDarkMode=SharedPrefManager(this)
+        val systemTheme = when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> { true }
+            Configuration.UI_MODE_NIGHT_NO -> { false }
+            else -> { false }
+        }
         val dao=DbCreation.getDataBase(application).dao
         val repo=SavedDataRepo(dao)
         val factory=SavedDataViewModelFactory(repo=repo)
         val viewModel = MainViewModelForApi(MyRepository())
         super.onCreate(savedInstanceState)
         setContent {
+            sharedPrefDarkMode.saveBoolean("DARKMODE",systemTheme)
             FindYourMealTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
