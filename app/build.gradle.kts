@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -65,43 +67,44 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.06.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // Pager and Indicators - Accompanist
-    implementation ("com.google.accompanist:accompanist-pager:0.24.2-alpha")
-    implementation ("com.google.accompanist:accompanist-pager-indicators:0.24.2-alpha")
+    implementation ("com.google.accompanist:accompanist-pager:0.30.1")
+    implementation ("com.google.accompanist:accompanist-pager-indicators:0.30.1")
     //navigation
-    implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation("androidx.navigation:navigation-compose:2.7.5")
 
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
-    //Coil
-    implementation("io.coil-kt:coil-compose:2.4.0")
+    //LottieFiles animation
+    implementation("com.airbnb.android:lottie-compose:6.1.0")
 
     // Jetpack Compose
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-alpha03")
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
 
     // Coroutines for asynchronous programming
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     //extended icons
     implementation("androidx.compose.material:material-icons-extended-android:1.5.4")
 
-    //LottieFiles animation
-    implementation("com.airbnb.android:lottie-compose:6.0.0")
+
+    //Coil
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
     // Room
-    implementation ("androidx.room:room-runtime:2.5.0")
-    kapt("androidx.room:room-compiler:2.5.0")
+    implementation ("androidx.room:room-runtime:2.6.0")
+    kapt("androidx.room:room-compiler:2.6.0")
     // Kotlin Extensions and Coroutines support for Room
-    implementation ("androidx.room:room-ktx:2.5.0")
-    annotationProcessor("androidx.room:room-compiler:2.5.0")
+    implementation ("androidx.room:room-ktx:2.6.0")
+    annotationProcessor("androidx.room:room-compiler:2.6.0")
 
     //searchview
     implementation("androidx.compose.material3:material3:1.1.2")

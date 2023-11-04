@@ -1,8 +1,7 @@
 package com.example.findyourmeal.startup.mainlayout
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -21,14 +20,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckBox
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.CheckBoxOutlineBlank
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissState
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,23 +39,23 @@ import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.findyourmeal.R
+import com.example.findyourmeal.room.SavedData
 import com.example.findyourmeal.room.SavedDataViewModel
 import com.example.findyourmeal.room.SavedDataViewModelFactory
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.findyourmeal.room.SavedData
-import kotlinx.coroutines.selects.select
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,15 +63,12 @@ import kotlinx.coroutines.selects.select
 fun FavScn(
     navController: NavController,
     factory: SavedDataViewModelFactory,
-    viewModel: SavedDataViewModel = viewModel(factory = factory)
+    viewModelFromRoom: SavedDataViewModel = viewModel(factory = factory)
 ) {
     var isLongCLick by rememberSaveable { mutableStateOf(false) }
-    val allSavedData = viewModel.allSavedData.collectAsState(initial = emptyList())
-    val allData = allSavedData.value.toMutableList()
+    val allSavedData = viewModelFromRoom.allSavedData.collectAsState(initial = emptyList())
+//    val allSavedMutable= allSavedData.value.toMutableStateList()
     var selectAllClick by rememberSaveable { mutableStateOf(false) }
-    BackHandler(true) {
-        isLongCLick = !isLongCLick
-    }
     LazyColumn(
         modifier = Modifier.padding(bottom = 70.dp),
         state = rememberLazyListState()
@@ -86,7 +83,7 @@ fun FavScn(
                     modifier = Modifier.height(60.dp)
                 ) {
                     Text(
-                        text = "Your favourite",
+                        text = stringResource(id = R.string.your_fav),
                         modifier = Modifier
                             .weight(1f)
                             .padding(start = 14.dp)
@@ -117,58 +114,37 @@ fun FavScn(
             }
 
         }
-
-        items(allData) { item: SavedData ->
-            val state = rememberDismissState(
+        items(items = allSavedData.value,
+            key = { item: SavedData -> item.tbId })
+        { item: SavedData ->
+            val currentItem by rememberUpdatedState(item)
+            val dismissState = rememberDismissState(
                 confirmValueChange = {
-                    when (it) {
-                        DismissValue.DismissedToStart -> {}
-                        DismissValue.DismissedToEnd -> {}
-                        DismissValue.Default -> {}
-                    }
                     if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
-                        allData.remove(item)
-                        viewModel.deleteSavedData(item)
-                    }
-                    true
+                        viewModelFromRoom.deleteSavedData(currentItem)
+                        true
+                    } else false
                 }
             )
+            if (dismissState.isDismissed(DismissDirection.EndToStart) ||
+                dismissState.isDismissed(DismissDirection.StartToEnd)
+            ) {
+                viewModelFromRoom.deleteSavedData(item)
+            }
             SwipeToDismiss(
-                state = state,
+                state = dismissState,
+                //this background is the background of items when we swipe
                 background = {
-                    val color = when (state.dismissDirection) {
-                        DismissDirection.EndToStart -> Color.Red
-                        DismissDirection.StartToEnd -> Color.Red
-                        null -> Color.Transparent
-                    }
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(color = color)
-                            .padding(vertical = 40.dp, horizontal = 8.dp)
-                    )
+                    SwipeBackground(dismissState = dismissState)
                 },
-                directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
                 dismissContent = {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        elevation = CardDefaults.cardElevation(
-                            animateDpAsState(
-                                if (state.dismissDirection != null) 4.dp else 0.dp, label = ""
-                            ).value
-                        )
+                    EachFav(
+                        mealId = item.mealId, isSelectAll = selectAllClick,
+                        isLongClick = isLongCLick,
+                        mealTitle = item.title,
+                        onLongClicking = { isLongCLick = !isLongCLick },
+                        item = item
                     )
-                    {
-                        EachFav(
-                            mealId = item.mealId, isSelectAll = selectAllClick,
-                            isLongClick = isLongCLick,
-                            mealTitle = item.title,
-                            onLongClicking = { isLongCLick = !isLongCLick },
-                            item = item,
-                            allSavedData.value.size
-                        )
-                    }
-
                 })
 
         }
@@ -183,8 +159,7 @@ fun EachFav(
     isLongClick: Boolean,
     mealTitle: String,
     onLongClicking: () -> Unit,
-    item: SavedData,
-    savedDataAmt: Int
+    item: SavedData
 ) {
     var isLongOnClick by rememberSaveable { mutableStateOf(false) }
     Card(
@@ -204,7 +179,8 @@ fun EachFav(
         Row {
             Box(modifier = Modifier.weight(0.4f)) {
                 Image(
-                    painter = painterResource(id = R.drawable.eat_img), contentDescription = null,
+                    painter = painterResource(id = R.drawable.eat_img),
+                    contentDescription = null,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -252,3 +228,40 @@ fun EachFav(
     }
 }
 
+@Composable
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+fun SwipeBackground(dismissState: DismissState) {
+    val direction = dismissState.dismissDirection ?: return
+    val color by animateColorAsState(
+        when (dismissState.targetValue) {
+            DismissValue.Default -> Color.LightGray
+            DismissValue.DismissedToEnd -> Color.Red
+            DismissValue.DismissedToStart -> Color.Red
+        }, label = ""
+    )
+    val alignment = when (direction) {
+        DismissDirection.StartToEnd -> Alignment.CenterStart
+        DismissDirection.EndToStart -> Alignment.CenterEnd
+    }
+    val icon = when (direction) {
+        DismissDirection.StartToEnd -> Icons.Default.Delete
+        DismissDirection.EndToStart -> Icons.Default.Delete
+    }
+    val scale by animateFloatAsState(
+        if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f, label = ""
+    )
+
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(color)
+            .padding(horizontal = 20.dp),
+        contentAlignment = alignment
+    ) {
+        Icon(
+            icon,
+            contentDescription = "Localized description",
+            modifier = Modifier.scale(scale)
+        )
+    }
+}

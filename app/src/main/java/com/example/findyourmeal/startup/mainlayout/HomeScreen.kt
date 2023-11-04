@@ -3,7 +3,7 @@ package com.example.findyourmeal.startup.mainlayout
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -30,32 +30,52 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.findyourmeal.R
+import com.example.findyourmeal.connectivity.ConnectivityObserver
 import com.example.findyourmeal.model.allcategories.Category
 import com.example.findyourmeal.room.SavedData
 import com.example.findyourmeal.room.SavedDataViewModel
 import com.example.findyourmeal.room.SavedDataViewModelFactory
+import com.example.findyourmeal.shimmer.AnimatedShimmer
 import com.example.findyourmeal.startup.categorydialog.CustomDialogForCategory
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 @Composable
 fun HomeScreen(
-    navController: NavController, viewModelForApi: MainViewModelForApi,
-    factory: SavedDataViewModelFactory, vmOfRoom: SavedDataViewModel = viewModel(factory = factory)
+    viewModelForApi: MainViewModelForApi,
+    factory: SavedDataViewModelFactory, vmOfRoom: SavedDataViewModel = viewModel(factory = factory),
+    status: ConnectivityObserver.Status
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.animation_for_home))
-    val loading by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
     val allCategory: List<Category> = viewModelForApi.allCategories
     LaunchedEffect(Unit) {
         viewModelForApi.getAllCategories()
     }
     val scrollState = rememberScrollState()
+
+    if (allCategory.isEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
+            AnimatedShimmer()
+        }
+    }
+    if (status.toString().equals(
+            ConnectivityObserver.Status.Unavailable.toString(),
+            true
+        ) || status.toString().equals(ConnectivityObserver.Status.Lost.toString(), true)
+    ) {
+        AnimatedShimmer()
+    } else if (status.toString()
+            .equals(ConnectivityObserver.Status.Available.toString(), true)
+    ) {
     Column(
         horizontalAlignment = CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -71,33 +91,20 @@ fun HomeScreen(
             iterations = LottieConstants.IterateForever
         )
 
-        if (allCategory.isEmpty()) {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = CenterHorizontally
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                verticalArrangement = Arrangement.spacedBy(25.dp),
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .height(1000.dp)
+                    .fillMaxWidth()
             ) {
-                LottieAnimation(
-                    modifier = Modifier.size(200.dp),
-                    enableMergePaths = true,
-                    speed = 2f,
-                    composition = loading,
-                    reverseOnRepeat = true,
-                )
-            }
-        }
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(25.dp),
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .height(1000.dp)
-                .fillMaxWidth()
-        ) {
 
-            items(allCategory) { item: Category ->
-                EachCategory(
-                    category = item,vmOfRoom
-                )
+                items(allCategory) { item: Category ->
+                    EachCategory(
+                        category = item, vmOfRoom
+                    )
+                }
             }
         }
     }
@@ -129,8 +136,12 @@ fun EachCategory(
             .wrapContentSize()
             .clickable {
                 showDialog.value = true
-                vmOfRoom.insertData(SavedData(mealId = category.idCategory,
-                    title = category.strCategory))
+                vmOfRoom.insertData(
+                    SavedData(
+                        mealId = category.idCategory,
+                        title = category.strCategory
+                    )
+                )
             }
             .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
             .width(250.dp)

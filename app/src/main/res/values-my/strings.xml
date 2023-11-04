@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Find Your Meal</string>
+    <string name="result">ရှာဖွေမှုရလဒ်</string>
+    <string name="search_with_area">ဧရိယာဖြင့်ရှာဖွေပါ။</string>
+    <string name="filter_by_category">သက်ဆိုင်ရာ အမျိုးအစားအလိုက် သင့် mael ကို စစ်ထုတ်ပါ</string>
+    <string name="search">ရှာဖွေ</string>
+    <string name="select_language">သင့်ဘာသာစကားကို ရွေးချယ်ပါ။</string>
+    <string name="area">ဧရိယာ</string>
+    <string name="meal">အစားအစာများ</string>
+    <string name="settings">ဆက်တင်များ</string>
+    <string name="your_fav">သင်အကြိုက်ဆုံးစာရင်း</string>
+    <string name="related_category">
+ဆက်စပ်အမျိုးအစားအတွက် ရှာဖွေမှုရလဒ်။</string>
+
+</resources>

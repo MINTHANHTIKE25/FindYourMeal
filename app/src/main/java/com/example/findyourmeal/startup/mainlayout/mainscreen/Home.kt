@@ -1,6 +1,8 @@
 package com.example.findyourmeal.startup.mainlayout.mainscreen
 
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,7 +30,9 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.findyourmeal.connectivity.ConnectivityObserver
 import com.example.findyourmeal.room.SavedDataViewModelFactory
+import com.example.findyourmeal.shimmer.AnimatedShimmer
 import com.example.findyourmeal.ui.theme.PurpleGrey40
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
@@ -39,7 +43,9 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 fun Home(
     viewModelForApi: MainViewModelForApi,
     factory: SavedDataViewModelFactory,
-    mainNavController: NavController
+    mainNavController: NavController,
+    context: Context,
+    status: ConnectivityObserver.Status
 ) {
     val navController: NavHostController = rememberNavController()
 
@@ -48,7 +54,15 @@ fun Home(
             BottomNavBar(navController = navController)
         }
     ) { paddingvalues ->
-        MainScnNavGraph(viewModelForApi = viewModelForApi, navController, factory,mainNavController)
+        paddingvalues
+        MainScnNavGraph(
+            viewModelForApi = viewModelForApi,
+            navController,
+            factory,
+            mainNavController,
+            context = context,
+            status
+        )
     }
 }
 

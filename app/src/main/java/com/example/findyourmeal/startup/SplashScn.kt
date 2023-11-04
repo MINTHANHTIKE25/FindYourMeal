@@ -20,6 +20,7 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.findyourmeal.R
+import com.example.findyourmeal.savinginmemory.SharedPrefManager
 import kotlinx.coroutines.delay
 
 /**
@@ -27,7 +28,7 @@ import kotlinx.coroutines.delay
  */
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun SplashScn(navController: NavController) {
+fun SplashScn(navController: NavController, sharedPrefManager: SharedPrefManager) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.splash_animation))
     Column(
         modifier = Modifier
@@ -36,7 +37,6 @@ fun SplashScn(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         AnimatedVisibility(
             visible = true,
             enter = slideInHorizontally() + fadeIn()
@@ -51,7 +51,18 @@ fun SplashScn(navController: NavController) {
         LaunchedEffect(key1 = true) {
             delay(2000)
             navController.popBackStack()
-            navController.navigate(StartUpScreen.OnBoardingScreen.route)
+            navController.navigate(
+                getRoute(sharedPrefManager)
+            )
         }
+    }
+}
+
+fun getRoute(sharedPrefManager: SharedPrefManager): String {
+    val getData = sharedPrefManager.retrieveBoolean("onboardingDone", true)
+    return if (getData) {
+        StartUpScreen.MainScreen.route
+    } else {
+        StartUpScreen.OnBoardingScreen.route
     }
 }

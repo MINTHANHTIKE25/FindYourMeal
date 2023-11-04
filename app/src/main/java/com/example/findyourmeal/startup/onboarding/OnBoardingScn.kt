@@ -60,7 +60,7 @@ fun OnBoardingScn(navController: NavController) {
         FinishButton(modifier = Modifier.padding(top = 15.dp), pagerState = pagerState) {
             navController.popBackStack()
             navController.navigate(StartUpScreen.MainScreen.route)
-            sharedPrefManager.saveBoolean("FINISHONBOARD", true)
+            sharedPrefManager.saveBoolean("onboardingDone", true)
         }
     }
 }

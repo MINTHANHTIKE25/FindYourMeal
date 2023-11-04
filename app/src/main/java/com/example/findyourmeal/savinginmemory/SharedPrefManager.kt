@@ -12,7 +12,17 @@ class SharedPrefManager(context: Context) {
         editor.putBoolean(key, value).apply()
     }
 
-    fun retrieveBoolean(key: String, value: Boolean): Boolean {
-        return sharedPreferences.getBoolean(key, value)
+    fun saveLanguage(value: String?) {
+        val editor = sharedPreferences.edit()
+        editor.putString("language", value).apply()
     }
+
+    fun retrieveBoolean(key: String, value: Boolean?): Boolean {
+        return sharedPreferences.getBoolean(key, value!!)
+    }
+
+    fun retrieveLanguage(value: String?): String {
+        return sharedPreferences.getString("language", value).toString()
+    }
+
 }

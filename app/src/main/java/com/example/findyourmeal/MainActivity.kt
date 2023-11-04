@@ -8,24 +8,33 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.example.findyourmeal.connectivity.ConnectivityObserver
+import com.example.findyourmeal.connectivity.NetworkConnectivityObserver
 import com.example.findyourmeal.data.repository.MyRepository
 import com.example.findyourmeal.room.DbCreation
 import com.example.findyourmeal.room.SavedDataRepo
-import com.example.findyourmeal.room.SavedDataViewModel
 import com.example.findyourmeal.room.SavedDataViewModelFactory
+import com.example.findyourmeal.savinginmemory.SharedPrefManager
 import com.example.findyourmeal.startup.MainNavSetup
 import com.example.findyourmeal.ui.theme.FindYourMealTheme
+import com.example.findyourmeal.viewmodel.LocaleViewModel
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
-        val dao=DbCreation.getDataBase(application).dao
-        val repo=SavedDataRepo(dao)
-        val factory=SavedDataViewModelFactory(repo=repo)
+        val dao = DbCreation.getDataBase(application).dao
+        val repo = SavedDataRepo(dao)
+        val factory = SavedDataViewModelFactory(repo = repo)
         val viewModel = MainViewModelForApi(MyRepository())
+        val localeViewModel = LocaleViewModel()
+        val sharedPrefManager = SharedPrefManager(this)
+        val connectivityObserver = NetworkConnectivityObserver(applicationContext)
         super.onCreate(savedInstanceState)
         setContent {
             FindYourMealTheme {
@@ -34,8 +43,17 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    val status by connectivityObserver.observe()
+                        .collectAsState(initial = ConnectivityObserver.Status.Available)
+                    if (sharedPrefManager.retrieveLanguage(localeViewModel.currentLocale)
+                            .equals("en", true)
+                    ) {
+                        localeViewModel.setLocale(Locale("en"), this, "en")
+                    } else {
+                        localeViewModel.setLocale(Locale("my"), this, "my")
+                    }
                     val navController = rememberNavController()
-                    MainNavSetup(navController, viewModel,factory)
+                    MainNavSetup(navController, viewModel, factory,status,sharedPrefManager)
                 }
             }
         }

@@ -21,8 +21,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.findyourmeal.R
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -31,7 +33,7 @@ fun PagingForSearchScreen(
     navController: NavController,
     viewModelForApi: MainViewModelForApi,
 ) {
-    val tabItems = listOf("Area", "Meals")
+    val tabItems = listOf(stringResource(id = R.string.area), stringResource(id = R.string.meal))
     val pagerState = rememberPagerState(pageCount = { tabItems.size })
     val selectedTabIndex = remember {
         mutableIntStateOf(0)
@@ -72,11 +74,11 @@ fun PagingForSearchScreen(
             state = pagerState,
             modifier = Modifier
                 .fillMaxSize()
-                .weight(1f)
         ) {
-            if (selectedTabIndex.intValue == 0 ){
+            if (selectedTabIndex.intValue == 0) {
                 Area(navController, viewModelForApi)
-            }else{
+            }
+            if (selectedTabIndex.intValue == 1) {
                 Meals(navController, viewModelForApi)
             }
 

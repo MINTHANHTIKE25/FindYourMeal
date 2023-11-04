@@ -33,6 +33,7 @@ class MainViewModelForApi(private val myRepository: MyRepository) : ViewModel() 
         viewModelScope.launch {
             try {
                 searchMealById = myRepository.getSearchMealById(search).meals
+
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
             }
