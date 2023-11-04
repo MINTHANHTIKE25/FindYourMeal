@@ -18,23 +18,29 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 //Setting navigation host for main screen
 @Composable
-fun MainScnNavGraph(viewModelForApi: MainViewModelForApi, navController: NavHostController,
-                    factory: SavedDataViewModelFactory,
-                    mainNavController: NavController,context: Context,
-                    status: ConnectivityObserver.Status) {
+fun MainScnNavGraph(
+    viewModelForApi: MainViewModelForApi, navController: NavHostController,
+    factory: SavedDataViewModelFactory,
+    mainNavController: NavController, context: Context,
+    status: ConnectivityObserver.Status
+) {
 
     NavHost(navController = navController, startDestination = BottomNaviRoutes.HomeScreen.routes) {
         composable(BottomNaviRoutes.HomeScreen.routes) {
-            HomeScreen(viewModelForApi,factory, status = status)
+            HomeScreen(viewModelForApi, factory, status = status)
         }
         composable(BottomNaviRoutes.SearchScreen.routes) {
-            SearchScn(mainNavController, viewModelForApi,status)
+            SearchScn(mainNavController, viewModelForApi, status)
         }
         composable(BottomNaviRoutes.FavScreen.routes) {
-            FavScn(mainNavController,factory)
+            FavScn(mainNavController, factory)
         }
         composable(BottomNaviRoutes.SettingScreen.routes) {
-            SettingScn(navController, LocaleViewModel(), SharedPrefManager(context))
+            SettingScn(
+                navController = navController,
+                localeViewModel = LocaleViewModel(),
+                sharedPrefManager = SharedPrefManager(context)
+            )
 
         }
     }

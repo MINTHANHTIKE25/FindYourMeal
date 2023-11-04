@@ -44,7 +44,7 @@ fun MainNavSetup(
         ) {
             val getInt = it.arguments?.getInt(MEAL)
 
-            DetailScn(getInt!!, viewModelForApi, navController)
+            DetailScn(getInt!!, viewModelForApi, navController,factory)
 
         }
         composable(route = StartUpScreen.SearchResult.route,

@@ -159,6 +159,8 @@ fun DetailScn(
                     actions = {
                         IconButton(onClick = { /*TODO*/ }) {
 
+                        }
+
                         var addToFav by remember{ mutableStateOf(false) }
                         IconButton(onClick = {
                             addToFav =!addToFav
