@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.findyourmeal.R
 import com.example.findyourmeal.connectivity.ConnectivityObserver
-import com.example.findyourmeal.shimmer.AnimatedShimmer
 import com.example.findyourmeal.startup.SEARCH_BY
 import com.example.findyourmeal.startup.StartUpScreen
 import com.example.findyourmeal.startup.TEXT
@@ -71,16 +70,7 @@ fun SearchScn(
         ) {
 
         }
-
-        if (status.toString().equals(
-                ConnectivityObserver.Status.Unavailable.toString(),
-                true
-            ) || status.toString().equals(ConnectivityObserver.Status.Lost.toString(), true)
-        ){
-            AnimatedShimmer()
-        }else {
-            PagingForSearchScreen(navController, viewModelForApi)
-        }
+        PagingForSearchScreen(navController, viewModelForApi, status)
 
     }
 }

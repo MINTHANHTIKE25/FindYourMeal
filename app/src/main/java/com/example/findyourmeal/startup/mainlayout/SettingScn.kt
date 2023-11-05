@@ -6,12 +6,15 @@ import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -35,22 +38,27 @@ fun SettingScn(sharedPrefManager: SharedPrefManager,localeViewModel : LocaleView
     
     Scaffold(
         topBar = {
-            TopAppBar(title = { stringResource(id = R.string.settings)})
+            TopAppBar(title = { Text(text =stringResource(id = R.string.settings),
+                style = MaterialTheme.typography.headlineMedium)},
+                modifier = Modifier.padding(bottom = 20.dp, start = 20.dp))
         }
     ) {paddingValues ->
+        Spacer(modifier = Modifier.padding(vertical = 20.dp))
         Column(
-            modifier = Modifier.fillMaxSize().padding(paddingValues)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.Top
         ) {
             Text(
                 text = stringResource(id = R.string.select_language),
-                fontFamily = FontFamily.Cursive,
-                fontSize = 30.sp,
-                modifier = Modifier.padding(all = 10.dp)
+                fontFamily = FontFamily.Serif,
+                fontSize = 25.sp,
+                modifier = Modifier.padding(start = 20.dp)
             )
             Spacer(
                 modifier = Modifier
                     .padding(vertical = 10.dp)
-                    .background(Color.Black)
             )
 
             val context = LocalContext.current
@@ -60,7 +68,7 @@ fun SettingScn(sharedPrefManager: SharedPrefManager,localeViewModel : LocaleView
                     .clickable {
                         sharedPrefManager.saveLanguage("en")
                         val locale = Locale("en")
-                        localeViewModel.setLocale(locale,context,"en")
+                        localeViewModel.setLocale(locale, context, "en")
                         navController.popBackStack()
 
                     }
@@ -78,7 +86,7 @@ fun SettingScn(sharedPrefManager: SharedPrefManager,localeViewModel : LocaleView
                     .clickable {
                         sharedPrefManager.saveLanguage("my")
                         val locale = Locale("my")
-                        localeViewModel.setLocale(locale,context,"my")
+                        localeViewModel.setLocale(locale, context, "my")
                         navController.popBackStack()
                     }
                     .fillMaxWidth()

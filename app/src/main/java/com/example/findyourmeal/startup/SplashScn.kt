@@ -49,7 +49,7 @@ fun SplashScn(navController: NavController, sharedPrefManager: SharedPrefManager
             )
         }
         LaunchedEffect(key1 = true) {
-            delay(2000)
+            delay(1700)
             navController.popBackStack()
             navController.navigate(
                 getRoute(sharedPrefManager)
@@ -59,7 +59,7 @@ fun SplashScn(navController: NavController, sharedPrefManager: SharedPrefManager
 }
 
 fun getRoute(sharedPrefManager: SharedPrefManager): String {
-    val getData = sharedPrefManager.retrieveBoolean("onboardingDone", true)
+    val getData = sharedPrefManager.retrieveBoolean("onboardingDone",false)
     return if (getData) {
         StartUpScreen.MainScreen.route
     } else {

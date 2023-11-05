@@ -26,4 +26,10 @@ class SavedDataViewModel(private val repo: SavedDataRepo) : ViewModel() {
             repo.deletingAllSaved()
         }
     }
+
+    fun deleteWithId(mealID:String){
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.deleteWithId(mealID)
+        }
+    }
 }

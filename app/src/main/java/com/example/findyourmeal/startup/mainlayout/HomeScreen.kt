@@ -3,12 +3,13 @@ package com.example.findyourmeal.startup.mainlayout
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -18,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,10 +40,8 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.findyourmeal.R
 import com.example.findyourmeal.connectivity.ConnectivityObserver
 import com.example.findyourmeal.model.allcategories.Category
-import com.example.findyourmeal.room.SavedData
 import com.example.findyourmeal.room.SavedDataViewModel
 import com.example.findyourmeal.room.SavedDataViewModelFactory
-import com.example.findyourmeal.shimmer.AnimatedShimmer
 import com.example.findyourmeal.startup.categorydialog.CustomDialogForCategory
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
@@ -51,6 +51,7 @@ fun HomeScreen(
     factory: SavedDataViewModelFactory, vmOfRoom: SavedDataViewModel = viewModel(factory = factory),
     status: ConnectivityObserver.Status
 ) {
+    val shimmer by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.shimmer_loading))
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.animation_for_home))
     val allCategory: List<Category> = viewModelForApi.allCategories
     LaunchedEffect(Unit) {
@@ -58,62 +59,100 @@ fun HomeScreen(
     }
     val scrollState = rememberScrollState()
 
-    if (allCategory.isEmpty()) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-        ) {
-            AnimatedShimmer()
-        }
-    }
     if (status.toString().equals(
             ConnectivityObserver.Status.Unavailable.toString(),
             true
-        ) || status.toString().equals(ConnectivityObserver.Status.Lost.toString(), true)
+        ) || status.toString().equals(ConnectivityObserver.Status.Lost.toString(), true) ||
+        status.toString().equals(ConnectivityObserver.Status.Losing.toString(), true) ||
+        status.toString().equals(ConnectivityObserver.Status.Loading.toString(), true)
     ) {
-        AnimatedShimmer()
+        Column {
+            LottieAnimation(
+                composition = shimmer,
+                modifier = Modifier
+                    .wrapContentHeight(),
+                restartOnPlay = true,
+                iterations = LottieConstants.IterateForever,
+                contentScale = ContentScale.FillBounds
+            )
+            LottieAnimation(
+                composition = shimmer,
+                modifier = Modifier
+                    .wrapContentHeight(),
+                restartOnPlay = true,
+                iterations = LottieConstants.IterateForever,
+                contentScale = ContentScale.FillBounds
+            )
+        }
+
     } else if (status.toString()
             .equals(ConnectivityObserver.Status.Available.toString(), true)
     ) {
-    Column(
-        horizontalAlignment = CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
-        modifier = Modifier
-            .wrapContentSize()
-            .verticalScroll(scrollState, true)
-            .padding(bottom = 80.dp)
-    ) {
-        LottieAnimation(
-            composition = composition,
-            modifier = Modifier.size(200.dp),
-            restartOnPlay = true,
-            iterations = LottieConstants.IterateForever
-        )
+        Column(
+            horizontalAlignment = CenterHorizontally,
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState, true)
+                .padding(bottom = 80.dp)
+        ) {
+            LottieAnimation(
+                composition = composition,
+                modifier = Modifier.size(200.dp),
+                restartOnPlay = true,
+                iterations = LottieConstants.IterateForever,
+            )
 
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                verticalArrangement = Arrangement.spacedBy(25.dp),
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .height(1000.dp)
-                    .fillMaxWidth()
-            ) {
-
-                items(allCategory) { item: Category ->
-                    EachCategory(
-                        category = item, vmOfRoom
+            Text(
+                text = "All category in this meal app",
+                modifier = Modifier.padding(start = 20.dp, top = 10.dp, bottom = 15.dp),
+                style = MaterialTheme.typography.titleMedium
+            )
+            if (allCategory.isEmpty()) {
+                Column {
+                    LottieAnimation(
+                        composition = shimmer,
+                        modifier = Modifier
+                            .wrapContentHeight(),
+                        restartOnPlay = true,
+                        iterations = LottieConstants.IterateForever,
+                        contentScale = ContentScale.FillBounds
                     )
+                    LottieAnimation(
+                        composition = shimmer,
+                        modifier = Modifier
+                            .wrapContentHeight(),
+                        restartOnPlay = true,
+                        iterations = LottieConstants.IterateForever,
+                        contentScale = ContentScale.FillBounds
+                    )
+                }
+
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    verticalArrangement = Arrangement.spacedBy(25.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .height(1000.dp)
+                        .fillMaxWidth()
+                ) {
+
+                    items(allCategory) { item: Category ->
+                        EachCategory(
+                            category = item
+                        )
+                    }
                 }
             }
         }
     }
 }
 
+
 @Composable
 fun EachCategory(
-    category: Category,
-    vmOfRoom: SavedDataViewModel
+    category: Category
 ) {
 
     //Creating dialog to show the information of the category

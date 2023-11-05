@@ -16,4 +16,8 @@ class SavedDataRepo(private val savedDataDao: SavedDataDao) {
     suspend fun deletingAllSaved(){
         savedDataDao.deleteAllSavedData()
     }
+
+    suspend fun deleteWithId(meal_Id:String){
+        savedDataDao.deleteSavedWithMealId(meal_Id)
+    }
 }

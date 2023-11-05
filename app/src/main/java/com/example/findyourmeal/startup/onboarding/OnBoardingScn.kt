@@ -2,6 +2,7 @@ package com.example.findyourmeal.startup.onboarding
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.findyourmeal.savinginmemory.SharedPrefManager
 import com.example.findyourmeal.startup.StartUpScreen
+import com.example.findyourmeal.ui.theme.md_theme_dark_onPrimaryContainer
+import com.example.findyourmeal.ui.theme.md_theme_light_onPrimaryContainer
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
@@ -40,7 +43,7 @@ fun OnBoardingScn(navController: NavController) {
         OnBoardingPages.Second,
         OnBoardingPages.Third
     )
-
+    val isDarkMode=SharedPrefManager(LocalContext.current).retrieveBoolean("DARKMODE",false)
     val pagerState = rememberPagerState()
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -55,9 +58,11 @@ fun OnBoardingScn(navController: NavController) {
             pagerState = pagerState,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(top = 35.dp)
+                .padding(top = 35.dp),
+            activeColor = if (isDarkMode) Color.White else Color.Black,
+            inactiveColor = Color.Gray
         )
-        FinishButton(modifier = Modifier.padding(top = 15.dp), pagerState = pagerState) {
+        FinishButton(modifier = Modifier.padding(top = 15.dp), pagerState = pagerState, isDarkMode = isDarkMode) {
             navController.popBackStack()
             navController.navigate(StartUpScreen.MainScreen.route)
             sharedPrefManager.saveBoolean("onboardingDone", true)
@@ -67,7 +72,7 @@ fun OnBoardingScn(navController: NavController) {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun FinishButton(modifier: Modifier, pagerState: PagerState, onClick: () -> Unit) {
+fun FinishButton(modifier: Modifier, pagerState: PagerState,isDarkMode:Boolean, onClick: () -> Unit) {
     Row(
         modifier = modifier.padding(horizontal = 40.dp),
         verticalAlignment = Alignment.Top,
@@ -79,9 +84,12 @@ fun FinishButton(modifier: Modifier, pagerState: PagerState, onClick: () -> Unit
         ) {
             Button(
                 onClick = onClick,
-                colors = ButtonDefaults.buttonColors(contentColor = Color.White)
+                colors = ButtonDefaults.buttonColors(
+                    if (isDarkMode) Color.White else Color.Black
+                )
             ) {
-                Text(text = "Finish")
+                Text(text = "Finish",
+                    color = if (isDarkMode) Color.Black else Color.White)
             }
         }
     }

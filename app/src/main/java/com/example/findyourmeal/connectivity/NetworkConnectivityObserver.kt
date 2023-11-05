@@ -35,6 +35,11 @@ class NetworkConnectivityObserver(
                     launch { send(ConnectivityObserver.Status.Lost) }
                 }
 
+                override fun onLosing(network: Network, maxMsToLive: Int) {
+                    super.onLosing(network, maxMsToLive)
+                    launch { send(ConnectivityObserver.Status.Losing) }
+                }
+
             }
             connectivityManager.registerDefaultNetworkCallback(callBack)
             awaitClose { connectivityManager.unregisterNetworkCallback(callBack) }

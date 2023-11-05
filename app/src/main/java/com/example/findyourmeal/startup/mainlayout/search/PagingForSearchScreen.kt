@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Tab
@@ -25,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.findyourmeal.R
+import com.example.findyourmeal.connectivity.ConnectivityObserver
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -32,6 +34,7 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 fun PagingForSearchScreen(
     navController: NavController,
     viewModelForApi: MainViewModelForApi,
+    status: ConnectivityObserver.Status
 ) {
     val tabItems = listOf(stringResource(id = R.string.area), stringResource(id = R.string.meal))
     val pagerState = rememberPagerState(pageCount = { tabItems.size })
@@ -49,11 +52,9 @@ fun PagingForSearchScreen(
 
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TabRow(
-            selectedTabIndex = selectedTabIndex.intValue,
+            selectedTabIndex = pagerState.currentPage,
             modifier = Modifier
                 .height(50.dp)
                 .background(Color.Unspecified)
@@ -73,16 +74,12 @@ fun PagingForSearchScreen(
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
-                .fillMaxSize()
+                .wrapContentHeight()
         ) {
-            if (selectedTabIndex.intValue == 0) {
-                Area(navController, viewModelForApi)
+            when(it){
+                0 ->  Area(navController, viewModelForApi,status)
+                1 ->  Meals(navController, viewModelForApi,status)
             }
-            if (selectedTabIndex.intValue == 1) {
-                Meals(navController, viewModelForApi)
-            }
-
-
         }
     }
 }

@@ -1,12 +1,10 @@
 package com.example.findyourmeal.startup.mainlayout
 
-import android.opengl.Visibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
@@ -16,7 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -35,8 +33,11 @@ import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -47,20 +48,21 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.findyourmeal.R
 import com.example.findyourmeal.room.SavedData
 import com.example.findyourmeal.room.SavedDataViewModel
 import com.example.findyourmeal.room.SavedDataViewModelFactory
+import com.example.findyourmeal.startup.ISFAV
 import com.example.findyourmeal.startup.MEAL
 import com.example.findyourmeal.startup.StartUpScreen
 
@@ -74,64 +76,58 @@ fun FavScn(
 ) {
     var isLongCLick by rememberSaveable { mutableStateOf(false) }
     val allSavedData = viewModelFromRoom.allSavedData.collectAsState(initial = emptyList())
-//    val allSavedMutable= allSavedData.value.toMutableStateList()
     var selectAllClick by rememberSaveable { mutableStateOf(false) }
-    Column {
-        Card(
-            modifier = Modifier.wrapContentSize(),
-            shape = RoundedCornerShape(bottomStart = 15.dp, bottomEnd = 15.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.height(60.dp)
-            ) {
+
+    Scaffold(
+        topBar = {
+            TopAppBar(title = {
                 Text(
                     text = stringResource(id = R.string.your_fav),
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 14.dp)
+                        .padding(start = 10.dp),
+                    style = MaterialTheme.typography.headlineSmall
                 )
-                Box {
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(end = 5.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (isLongCLick) {
+            },
+                actions = {
+                    Box {
+                        Row(
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .padding(end = 2.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            if (isLongCLick) {
 
-                            IconButton(onClick = { selectAllClick = !selectAllClick }) {
-                                Icon(
-                                    imageVector = if (selectAllClick) {
-                                        Icons.Filled.SelectAll
-                                    } else {
-                                        Icons.Outlined.CheckBoxOutlineBlank
-                                    },
-                                    contentDescription = null
-                                )
-                            }
-                            if (!selectAllClick) {
-                                Text(text = "Select All")
-                            } else {
-                                IconButton(onClick = { viewModelFromRoom.deleteAll() }) {
+                                IconButton(onClick = { selectAllClick = !selectAllClick }) {
                                     Icon(
-                                        imageVector = Icons.Default.Delete,
+                                        imageVector = if (selectAllClick) {
+                                            Icons.Filled.SelectAll
+                                        } else {
+                                            Icons.Outlined.CheckBoxOutlineBlank
+                                        },
                                         contentDescription = null
                                     )
+                                }
+                                if (selectAllClick) {
+                                    IconButton(onClick = { viewModelFromRoom.deleteAll() }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = null
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            }
-        }
-
-
+                })
+        },
+        modifier = Modifier.padding(bottom = 65.dp)
+    ) { paddingValues ->
+        paddingValues
         LazyColumn(
-            modifier = Modifier.padding(bottom = 70.dp),
+            modifier = Modifier.padding(paddingValues),
             state = rememberLazyListState()
         ) {
-            item {}
             items(items = allSavedData.value,
                 key = { item: SavedData -> item.tbId })
             { item: SavedData ->
@@ -169,6 +165,7 @@ fun FavScn(
             }
         }
     }
+
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -198,18 +195,21 @@ fun EachFav(
             ) {
                 navController.navigate(
                     StartUpScreen.DetailScreen.route.replace(
-                        "{$MEAL}",
-                        "${mealId.toInt()}"
+                        "{$MEAL}/{$ISFAV}",
+                        "${mealId.toInt()}/${true}"
                     )
                 )
             }
     ) {
         Row {
-            Box(modifier = Modifier.weight(0.4f)) {
+            Box(modifier = Modifier.padding(all = 10.dp)) {
                 AsyncImage(
                     model = photosUrl,
                     contentDescription = null,
-                    contentScale = ContentScale.FillBounds
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.medium)
+                        .size(160.dp)
                 )
             }
             Box(
@@ -225,8 +225,14 @@ fun EachFav(
                     }
                 }
                 Column {
-                    Text(text = mealTitle)
-                    Text(text = mealId)
+                    Text(
+                        text = "Meal Name : $mealTitle", modifier = Modifier.padding(10.dp),
+                        fontFamily = FontFamily.Serif
+                    )
+                    Text(
+                        text = "Meal Id : $mealId", modifier = Modifier.padding(10.dp),
+                        fontFamily = FontFamily.Serif
+                    )
                 }
 
             }

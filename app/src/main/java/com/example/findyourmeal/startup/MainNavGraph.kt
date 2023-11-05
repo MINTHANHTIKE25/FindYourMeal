@@ -39,12 +39,16 @@ fun MainNavSetup(
             arguments = listOf(
                 navArgument(MEAL) {
                     type = NavType.IntType
+                },
+                navArgument(ISFAV){
+                    type=NavType.BoolType
                 }
             )
         ) {
             val getInt = it.arguments?.getInt(MEAL)
-
-            DetailScn(getInt!!, viewModelForApi, navController,factory)
+            val getIsFav= it.arguments?.getBoolean(ISFAV)
+            DetailScn(getIsFav!!,getInt!!, viewModelForApi, navController,
+                factory, status = status)
 
         }
         composable(route = StartUpScreen.SearchResult.route,
@@ -59,7 +63,7 @@ fun MainNavSetup(
         ) {
             val searchBy = it.arguments?.getString(SEARCH_BY)
             val searchResult = it.arguments?.getString(TEXT)
-            SearchResult(searchResult!!, viewModelForApi,searchBy!!,navController)
+            SearchResult(searchResult!!, viewModelForApi,searchBy!!,navController,status)
         }
     }
 }

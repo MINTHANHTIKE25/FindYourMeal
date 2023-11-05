@@ -15,7 +15,8 @@ interface SavedDataDao {
 
     @Delete
     suspend fun deleteSavedData(savedData: SavedData)
-
+    @Query("Delete from saved_data_tb where mealId = :meal_Id")
+    suspend fun deleteSavedWithMealId(meal_Id:String)
     @Query("Select * from saved_data_tb")
     fun getSavedData(): Flow<List<SavedData>>
 

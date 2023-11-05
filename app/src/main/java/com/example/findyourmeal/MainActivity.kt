@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val status by connectivityObserver.observe()
-                        .collectAsState(initial = ConnectivityObserver.Status.Available)
+                        .collectAsState(initial = ConnectivityObserver.Status.Loading)
                     if (sharedPrefManager.retrieveLanguage(localeViewModel.currentLocale)
                             .equals("en", true)
                     ) {
