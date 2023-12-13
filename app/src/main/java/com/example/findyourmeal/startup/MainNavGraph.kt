@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -20,8 +21,10 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun MainNavSetup(
-    navController: NavHostController, viewModelForApi: MainViewModelForApi,
-    factory: SavedDataViewModelFactory,status : ConnectivityObserver.Status,
+    viewModelForApi: MainViewModelForApi= hiltViewModel(),
+    navController: NavHostController,
+    factory: SavedDataViewModelFactory,
+    status : ConnectivityObserver.Status,
     sharedPrefManager: SharedPrefManager
 ) {
 
@@ -33,7 +36,11 @@ fun MainNavSetup(
             OnBoardingScn(navController = navController)
         }
         composable(route = StartUpScreen.MainScreen.route) {
-            Home(viewModelForApi, factory, navController, LocalContext.current,status)
+            Home(
+                viewModelForApi=viewModelForApi,
+                factory,
+                navController,
+                LocalContext.current,status)
         }
         composable(route = StartUpScreen.DetailScreen.route,
             arguments = listOf(

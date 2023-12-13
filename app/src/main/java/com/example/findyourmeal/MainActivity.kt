@@ -12,6 +12,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.findyourmeal.connectivity.ConnectivityObserver
 import com.example.findyourmeal.connectivity.NetworkConnectivityObserver
@@ -24,8 +25,10 @@ import com.example.findyourmeal.startup.MainNavSetup
 import com.example.findyourmeal.ui.theme.FindYourMealTheme
 import com.example.findyourmeal.viewmodel.LocaleViewModel
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +44,6 @@ class MainActivity : ComponentActivity() {
         val repo=SavedDataRepo(dao)
         val factory=SavedDataViewModelFactory(repo=repo)
 
-        val viewModel = MainViewModelForApi(MyRepository())
         val localeViewModel = LocaleViewModel()
         val sharedPrefManager = SharedPrefManager(this)
         val connectivityObserver = NetworkConnectivityObserver(applicationContext)
@@ -64,7 +66,11 @@ class MainActivity : ComponentActivity() {
                         localeViewModel.setLocale(Locale("my"), this, "my")
                     }
                     val navController = rememberNavController()
-                    MainNavSetup(navController, viewModel, factory,status,sharedPrefManager)
+                    MainNavSetup(
+                        navController=navController,
+                        factory = factory,
+                        status = status,
+                        sharedPrefManager = sharedPrefManager)
                 }
             }
         }

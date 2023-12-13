@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -40,7 +41,7 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 @Composable
 fun Home(
-    viewModelForApi: MainViewModelForApi,
+    viewModelForApi: MainViewModelForApi ,
     factory: SavedDataViewModelFactory,
     mainNavController: NavController,
     context: Context,
@@ -73,11 +74,13 @@ fun BottomNavBar(navController: NavController) {
     Row(
         modifier = Modifier
             .height(80.dp)
-            .background(if (isDarkMode){
-                md_theme_dark_secondaryContainer
-            }else{
-                md_theme_light_primary
-            })
+            .background(
+                if (isDarkMode) {
+                    md_theme_dark_secondaryContainer
+                } else {
+                    md_theme_light_primary
+                }
+            )
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = CenterVertically

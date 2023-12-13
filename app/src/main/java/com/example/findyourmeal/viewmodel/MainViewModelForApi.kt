@@ -8,10 +8,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.findyourmeal.data.repository.MyRepository
 import com.example.findyourmeal.model.allcategories.Category
 import com.example.findyourmeal.model.sarchmealbyid.Meal
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModelForApi(private val myRepository: MyRepository) : ViewModel() {
+@HiltViewModel
+class MainViewModelForApi @Inject constructor(
+    private val myRepository: MyRepository
+) : ViewModel() {
 
     var errorMessage: String by mutableStateOf("")
     var allCategories: List<Category> by mutableStateOf(listOf())
