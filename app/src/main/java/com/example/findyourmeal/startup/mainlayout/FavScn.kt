@@ -55,13 +55,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.findyourmeal.R
 import com.example.findyourmeal.room.SavedData
 import com.example.findyourmeal.room.SavedDataViewModel
-import com.example.findyourmeal.room.SavedDataViewModelFactory
 import com.example.findyourmeal.startup.ISFAV
 import com.example.findyourmeal.startup.MEAL
 import com.example.findyourmeal.startup.StartUpScreen
@@ -71,8 +71,8 @@ import com.example.findyourmeal.startup.StartUpScreen
 @Composable
 fun FavScn(
     navController: NavController,
-    factory: SavedDataViewModelFactory,
-    viewModelFromRoom: SavedDataViewModel = viewModel(factory = factory)
+//    factory: SavedDataViewModelFactory,
+    viewModelFromRoom: SavedDataViewModel = hiltViewModel()
 ) {
     var isLongCLick by rememberSaveable { mutableStateOf(false) }
     val allSavedData = viewModelFromRoom.allSavedData.collectAsState(initial = emptyList())

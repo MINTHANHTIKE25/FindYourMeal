@@ -16,10 +16,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.findyourmeal.connectivity.ConnectivityObserver
 import com.example.findyourmeal.connectivity.NetworkConnectivityObserver
-import com.example.findyourmeal.data.repository.MyRepository
-import com.example.findyourmeal.room.DbCreation
-import com.example.findyourmeal.room.SavedDataRepo
-import com.example.findyourmeal.room.SavedDataViewModelFactory
 import com.example.findyourmeal.savinginmemory.SharedPrefManager
 import com.example.findyourmeal.startup.MainNavSetup
 import com.example.findyourmeal.ui.theme.FindYourMealTheme
@@ -40,9 +36,9 @@ class MainActivity : ComponentActivity() {
             Configuration.UI_MODE_NIGHT_NO -> { false }
             else -> { false }
         }
-        val dao=DbCreation.getDataBase(application).dao
-        val repo=SavedDataRepo(dao)
-        val factory=SavedDataViewModelFactory(repo=repo)
+//        val dao=DbCreation.getDataBase(application).dao
+//        val repo=SavedDataRepo(dao)
+//        val factory=SavedDataViewModelFactory(repo=repo)
 
         val localeViewModel = LocaleViewModel()
         val sharedPrefManager = SharedPrefManager(this)
@@ -68,7 +64,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     MainNavSetup(
                         navController=navController,
-                        factory = factory,
+//                        factory = factory,
                         status = status,
                         sharedPrefManager = sharedPrefManager)
                 }

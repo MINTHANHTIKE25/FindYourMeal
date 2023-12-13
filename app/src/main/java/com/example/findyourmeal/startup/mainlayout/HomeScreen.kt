@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.airbnb.lottie.compose.LottieAnimation
@@ -41,14 +42,14 @@ import com.example.findyourmeal.R
 import com.example.findyourmeal.connectivity.ConnectivityObserver
 import com.example.findyourmeal.model.allcategories.Category
 import com.example.findyourmeal.room.SavedDataViewModel
-import com.example.findyourmeal.room.SavedDataViewModelFactory
 import com.example.findyourmeal.startup.categorydialog.CustomDialogForCategory
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 @Composable
 fun HomeScreen(
     viewModelForApi: MainViewModelForApi,
-    factory: SavedDataViewModelFactory, vmOfRoom: SavedDataViewModel = viewModel(factory = factory),
+//    factory: SavedDataViewModelFactory,
+    vmOfRoom: SavedDataViewModel = hiltViewModel(),
     status: ConnectivityObserver.Status
 ) {
     val shimmer by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.shimmer_loading))

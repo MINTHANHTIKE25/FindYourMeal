@@ -11,7 +11,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.findyourmeal.connectivity.ConnectivityObserver
-import com.example.findyourmeal.room.SavedDataViewModelFactory
 import com.example.findyourmeal.savinginmemory.SharedPrefManager
 import com.example.findyourmeal.startup.mainlayout.detailscreen.DetailScn
 import com.example.findyourmeal.startup.mainlayout.mainscreen.Home
@@ -23,7 +22,7 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 fun MainNavSetup(
     viewModelForApi: MainViewModelForApi= hiltViewModel(),
     navController: NavHostController,
-    factory: SavedDataViewModelFactory,
+//    factory: SavedDataViewModelFactory,
     status : ConnectivityObserver.Status,
     sharedPrefManager: SharedPrefManager
 ) {
@@ -38,7 +37,7 @@ fun MainNavSetup(
         composable(route = StartUpScreen.MainScreen.route) {
             Home(
                 viewModelForApi=viewModelForApi,
-                factory,
+//                factory,
                 navController,
                 LocalContext.current,status)
         }
@@ -54,8 +53,12 @@ fun MainNavSetup(
         ) {
             val getInt = it.arguments?.getInt(MEAL)
             val getIsFav= it.arguments?.getBoolean(ISFAV)
-            DetailScn(getIsFav!!,getInt!!, viewModelForApi, navController,
-                factory, status = status)
+            DetailScn(
+                getIsFav!!,getInt!!,
+                viewModelForApi,
+                navController,
+//                factory,
+                status = status)
 
         }
         composable(route = StartUpScreen.SearchResult.route,

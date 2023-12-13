@@ -1,9 +1,12 @@
 package com.example.findyourmeal.module
 
 import android.content.Context
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.example.findyourmeal.data.api.ApiConstants
 import com.example.findyourmeal.data.api.ApiService
+import com.example.findyourmeal.room.DbCreation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,4 +48,14 @@ object AppModule {
     fun provideApiService(retrofit: Retrofit):ApiService{
         return retrofit.create(ApiService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideRoomDbCreate(@ApplicationContext context: Context)=Room.databaseBuilder(
+        context,DbCreation::class.java,"Saved_DataBase"
+    ).build()
+
+    @Provides
+    @Singleton
+    fun provideDao(myDb:DbCreation)=myDb.getYourDao()
 }

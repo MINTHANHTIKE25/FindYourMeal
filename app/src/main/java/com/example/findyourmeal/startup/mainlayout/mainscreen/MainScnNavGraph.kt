@@ -7,7 +7,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.findyourmeal.connectivity.ConnectivityObserver
-import com.example.findyourmeal.room.SavedDataViewModelFactory
 import com.example.findyourmeal.savinginmemory.SharedPrefManager
 import com.example.findyourmeal.startup.mainlayout.FavScn
 import com.example.findyourmeal.startup.mainlayout.HomeScreen
@@ -20,20 +19,26 @@ import com.example.findyourmeal.viewmodel.MainViewModelForApi
 @Composable
 fun MainScnNavGraph(
     viewModelForApi: MainViewModelForApi, navController: NavHostController,
-    factory: SavedDataViewModelFactory,
+//    factory: SavedDataViewModelFactory,
     mainNavController: NavController, context: Context,
     status: ConnectivityObserver.Status
 ) {
 
     NavHost(navController = navController, startDestination = BottomNaviRoutes.HomeScreen.routes) {
         composable(BottomNaviRoutes.HomeScreen.routes) {
-            HomeScreen(viewModelForApi, factory, status = status)
+            HomeScreen(
+                viewModelForApi,
+//                factory,
+                status = status)
         }
         composable(BottomNaviRoutes.SearchScreen.routes) {
             SearchScn(mainNavController, viewModelForApi, status)
         }
         composable(BottomNaviRoutes.FavScreen.routes) {
-            FavScn(mainNavController, factory)
+            FavScn(
+                mainNavController,
+//                factory
+            )
         }
         composable(BottomNaviRoutes.SettingScreen.routes) {
             SettingScn(

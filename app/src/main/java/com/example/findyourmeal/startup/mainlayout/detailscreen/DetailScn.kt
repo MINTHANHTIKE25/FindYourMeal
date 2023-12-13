@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -56,7 +57,6 @@ import com.example.findyourmeal.connectivity.ConnectivityObserver
 import com.example.findyourmeal.model.sarchmealbyid.Meal
 import com.example.findyourmeal.room.SavedData
 import com.example.findyourmeal.room.SavedDataViewModel
-import com.example.findyourmeal.room.SavedDataViewModelFactory
 import com.example.findyourmeal.viewmodel.MainViewModelForApi
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,8 +66,8 @@ fun DetailScn(
     search: Int,
     viewModelForApi: MainViewModelForApi,
     mainNavController: NavController,
-    factory: SavedDataViewModelFactory,
-    viewModelFromRoom: SavedDataViewModel = viewModel(factory = factory),
+//    factory: SavedDataViewModelFactory,
+    viewModelFromRoom: SavedDataViewModel = hiltViewModel(),
     status: ConnectivityObserver.Status
 ) {
     var meal: List<Meal?>?
